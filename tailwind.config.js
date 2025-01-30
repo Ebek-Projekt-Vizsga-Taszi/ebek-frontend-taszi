@@ -2,7 +2,14 @@
 export default {
   content: ["./index.html", "./src/**/*.{js,jsx}"],
   theme: {
-    extend: {},
+    extend: {
+      backgroundImage: {
+        "custom-bg": "url('/BackgroundPic.png')",
+      },
+      fontFamily: {
+        newsreader: ['Newsreader', 'serif'],
+      },
+    },
   },
-  plugins: [],
+  plugins: [require("daisyui")],
 };

@@ -1,5 +1,18 @@
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import LandingPage from './components/LandingPage'; // Importáljuk a LandingPage komponenst
+
+
 function App() {
-  return <div className="text-xl text-red-500">Lorem ipsum dolor sit amet consectetur adipisicing elit. Nam, neque.</div>;
+  return (
+    <>
+      <Router>
+        <Routes>
+          <Route path="/" element={<LandingPage />} /> {/* A gyökér útvonal a LandingPage komponenst jeleníti meg */}
+        </Routes>
+      </Router>
+    </>
+  );
 }
 
 export default App;
