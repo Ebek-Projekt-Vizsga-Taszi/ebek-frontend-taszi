@@ -1,4 +1,5 @@
-import React from 'react';
+import React from "react";
+import { Link } from "react-router-dom";
 
 const LandingPage = () => {
   return (
@@ -17,13 +18,18 @@ const LandingPage = () => {
         <p className="text-2xl">és legközelebb elég pár kattintás!</p>
       </div>
       <div className="absolute left-0 top-2/3 transform p-6 text-black font-newsreader flex space-x-9">
-        <button className="btn w-36 rounded-full">Bejelentkezés</button>
-        <button className="btn w-36 rounded-full">Regisztráció</button>
+        <Link to={"/Bejelentkezés"} className="btn w-36 rounded-full">
+          <button>Bejelentkezés</button>
+        </Link>
+        <Link to={"/Regisztracio"} className="btn w-36 rounded-full">
+          <button>Regisztráció</button>
+        </Link>
       </div>
+
       <div className="absolute bottom-0 left-0 w-full  p-4 flex justify-around">
-      <a href="#" className="text-white">Adatvédelmi irányelvek</a>
-        <a href="#" className="text-white">Felhasználási feltételek</a>
-        <a href="#" className="text-white">Jogi nyilatkozat</a>
+        <Link to={"/Iranyelvek"} className="absolute left-2 top-24 transform -translate-y-36 p-6 text-white">
+          <button>Adatvédelmi irányelvek</button>
+        </Link>
       </div>
     </div>
   );
