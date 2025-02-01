@@ -11,7 +11,7 @@ const Iranyelvek = () => {
         </button>
       </div>
       <div className="translate-y-10 text-white w-full max-w-4xl p-4">
-        <p className="text-left">Tisztelt Látogatónk!</p>
+        <p className="text-left">Tisztelt Látogatónk!kjdfvkbsfv</p>
         <br />
         <div className="flex flex-col space-y-3 text-sm">
           <p>Amikor Ön az Ebösszeírő internetes honlapját látogatja, eközben személyes adatait is átadja számunkra.</p>
