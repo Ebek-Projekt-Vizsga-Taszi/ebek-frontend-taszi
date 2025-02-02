@@ -4,9 +4,8 @@ import { Link } from "react-router-dom";
 const Regisztracio = () => {
   return (
     <div className="flex items-center justify-center min-h-screen text-sm">
-                {/* Csak akkor megy ha a szövegre nyomsz, orvosrásra szorul */}
-      <Link to={"/"} className="btn btn-sm absolute right-4 top-5 text-white font-newsreader">
-        <button>Vissza a kezdőlapra</button>
+      <Link to={"/"}>
+        <button className="btn btn-sm absolute right-4 top-5 text-white font-newsreader">Vissza a kezdőlapra</button>
       </Link>
 
       <div className="bg-gray-400 border border-black p-12 rounded-2xl shadow-lg w-[600px] relative">
@@ -53,7 +52,7 @@ const Regisztracio = () => {
 
           <div className="flex items-center mb-6">
             <input type="checkbox" id="terms" className="mr-2" required />
-            <label htmlFor="terms" className="text-sm text-black">
+            <label htmlFor="terms" className="text-sm text-black select-none">
               Elfogadom a feltételeinket
             </label>
           </div>
