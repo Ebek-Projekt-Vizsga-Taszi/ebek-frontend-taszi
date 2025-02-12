@@ -30,7 +30,7 @@ const Ujurlap = () => {
           <div className="absolute top-1/2 left-0 w-full transform -translate-y-1/2 h-1 bg-gray-200">
             <div
               className="h-1 bg-blue-500"
-              style={{ width: `${(step - 1) * 33.33}%` }}
+              style={{ width: `${(step - 1) * 34.33}%` }}
             ></div>
           </div>
           <div className="relative z-10 flex justify-between items-center">
