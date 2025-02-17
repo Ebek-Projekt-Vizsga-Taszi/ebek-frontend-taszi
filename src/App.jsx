@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LandingPage from "./components/LandingPage"; 
 import Iranyelvek from "./components/Iranyelvek";
-import Bejelentkezés from "./components/Bejelentkezés";  // Figyelj a pontos importálásra
+import Bejelentkezés from "./components/Bejelentkezés"; 
 import Regisztracio from "./components/Regisztracio"; 
 import Dashboard from "./components/Dashboard";
 
