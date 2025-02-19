@@ -10,7 +10,7 @@ const Ertesitesek = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setNotifications(['Emlékeztető: Töltse ki az Ebösszeíró lapot!']);
-    }, 60); //  1 perc után
+    }, 60000); //  1 perc után
 
     return () => clearTimeout(timer);
   }, []);
