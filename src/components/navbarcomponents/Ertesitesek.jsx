@@ -22,7 +22,7 @@ const Ertesitesek = () => {
         {notifications.map((notification, index) => (
           <li
             key={index}
-            className="mb-2 p-2 border border-gray-300 rounded-lg shadow-sm bg-blue-100"
+            className="mb-2 p-2 border border-gray-300 rounded-lg shadow-sm bg-grey"
           >
             {notification}
           </li>

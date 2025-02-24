@@ -1,6 +1,17 @@
 import React from 'react';
 
 const Urlapok = ({ formList }) => {
+  // Ha a formList nem létezik vagy üres, jelenítsünk meg egy üzenetet
+  if (!formList || formList.length === 0) {
+    return (
+      <div className="flex justify-center">
+        <div className="w-full max-w-4xl">
+          <h2 className="text-3xl font-bold mb-4 font-newsreader text-white">Nincsenek beküldött űrlapok</h2>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex justify-center">
       <div className="w-full max-w-4xl">

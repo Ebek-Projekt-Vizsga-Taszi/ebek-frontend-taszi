@@ -40,7 +40,7 @@ const Bejelentkezes = ({ setIsAuthenticated }) => {
       </Link>
       <div className="bg-gray-400 border border-black p-10 rounded-2xl shadow-lg w-[600px] h-[450px] relative">
         <div className="absolute top-4 right-4 w-12 translate-y-4 m-1">
-          <img src="Logo.png" alt="logo" />
+          <img src="LogoBlack.png" alt="logo" />
         </div>
 
         <h2 className="text-3xl font-bold mb-1 text-black">Bejelentkezés</h2>

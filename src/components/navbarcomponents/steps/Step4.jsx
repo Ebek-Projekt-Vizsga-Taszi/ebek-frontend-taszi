@@ -4,7 +4,7 @@ const Step4 = ({ handleBack }) => {
   return (
     <div>
       <h2 className="text-2xl font-bold mb-4">Sikeres adatfelvétel</h2>
-      <p className="text-lg text-black font-newsreader mb-4">Az űrlap kitöltése sikeresen megtörtént. Köszönjük!</p>
+      <p className="text-lg text-white font-newsreader mb-4">Az űrlap kitöltése sikeresen megtörtént. Köszönjük!</p>
       <div className="flex justify-center">
         <button
           type="button"

@@ -9,65 +9,65 @@ const Step2 = ({ handleNext, handleBack }) => {
       <h2 className="text-2xl font-bold mb-4">Eb adatai</h2>
       <form>
         <div className="mb-4">
-          <label className="block text-black font-newsreader mb-2">
+          <label className="block text-white font-newsreader mb-2">
             Eb hívóneve:
           </label>
           <input
-            className="border border-gray-300 p-2 w-full text-white bg-black"
+            className="border border-gray-300 p-2 w-full text-white bg-grey"
             type="text"
             placeholder="Hívónév"
           />
         </div>
         <div className="mb-4">
-          <label className="block text-black font-newsreader mb-2">
+          <label className="block text-white font-newsreader mb-2">
             Eb törzskönyvi neve: Kitöltése nem kötelező
           </label>
           <input
-            className="border border-gray-300 p-2 w-full text-white bg-black"
+            className="border border-gray-300 p-2 w-full text-white bg-grey"
             type="text"
             placeholder="Törzskönyvi név"
           />
         </div>
         <div className="mb-4">
-          <label className="block text-black font-newsreader mb-2">
+          <label className="block text-white font-newsreader mb-2">
             Eb fajtája:
           </label>
           <input
-            className="border border-gray-300 p-2 w-full text-white bg-black"
+            className="border border-gray-300 p-2 w-full text-white bg-grey"
             type="text"
             placeholder="Fajta"
           />
         </div>
         <div className="mb-4">
-          <label className="block text-black font-newsreader mb-2">
+          <label className="block text-white font-newsreader mb-2">
             Eb neme: Szuka, Kan
           </label>
-          <select className="border border-gray-300 p-2 w-full text-white bg-black">
+          <select className="border border-gray-300 p-2 w-full text-white bg-grey">
             <option value="Szuka">Szuka</option>
             <option value="Kan">Kan</option>
           </select>
         </div>
         <div className="mb-4">
-          <label className="block text-black font-newsreader mb-2">
+          <label className="block text-white font-newsreader mb-2">
             Eb születési ideje: Dátum (év/hónap/nap)
           </label>
           <input
-            className="border border-gray-300 p-2 w-full text-white bg-black"
+            className="border border-gray-300 p-2 w-full text-white bg-grey"
             type="date"
           />
         </div>
         <div className="mb-4">
-          <label className="block text-black font-newsreader mb-2">
+          <label className="block text-white font-newsreader mb-2">
             Eb színe:
           </label>
           <input
-            className="border border-gray-300 p-2 w-full text-white bg-black"
+            className="border border-gray-300 p-2 w-full text-white bg-grey"
             type="text"
             placeholder="Szín"
           />
         </div>
         <div className="mb-4">
-          <label className="block text-black font-newsreader mb-2">
+          <label className="block text-white font-newsreader mb-2">
             Eb rendelkezik mikrochippel:
             <input
               className="ml-2"
@@ -78,11 +78,11 @@ const Step2 = ({ handleNext, handleBack }) => {
           </label>
           {hasMicrochip && (
             <div className="mt-4">
-              <label className="block text-black font-newsreader mb-2">
+              <label className="block text-white font-newsreader mb-2">
                 Mikrochip sorszáma:
               </label>
               <input
-                className="border border-gray-300 p-2 w-full text-white bg-black"
+                className="border border-gray-300 p-2 w-full text-white bg-grey"
                 type="text"
                 placeholder="Mikrochip sorszáma"
               />
@@ -90,7 +90,7 @@ const Step2 = ({ handleNext, handleBack }) => {
           )}
         </div>
         <div className="mb-4">
-          <label className="block text-black font-newsreader mb-2">
+          <label className="block text-white font-newsreader mb-2">
             Eb ivartalanított:
             <input
               className="ml-2"
@@ -101,11 +101,11 @@ const Step2 = ({ handleNext, handleBack }) => {
           </label>
           {isNeutered && (
             <div className="mt-4">
-              <label className="block text-black font-newsreader mb-2">
+              <label className="block text-white font-newsreader mb-2">
                 Ivartalanításának időpontja: Dátum (év/hónap/nap)
               </label>
               <input
-                className="border border-gray-300 p-2 w-full text-white bg-black"
+                className="border border-gray-300 p-2 w-full text-white bg-grey"
                 type="date"
               />
             </div>

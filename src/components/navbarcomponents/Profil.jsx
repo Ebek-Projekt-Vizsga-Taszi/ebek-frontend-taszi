@@ -6,7 +6,7 @@ const Profil = () => {
       <h2 className="text-3xl font-bold mb-4">Profil Információk</h2>
       <form>
         <div className="mb-4">
-          <label className="block text-gray-700" htmlFor="email">
+          <label className="block text-white" htmlFor="email">
             E-mail cím:
           </label>
           <input className="w-full p-2 border border-gray-300 rounded" type="email" id="email" name="email" />
@@ -16,19 +16,19 @@ const Profil = () => {
       <h2 className="text-3xl font-bold mb-4 mt-8">Jelszó módosítása</h2>
       <form>
         <div className="mb-4">
-          <label className="block text-gray-700" htmlFor="currentPassword">
+          <label className="block text-white" htmlFor="currentPassword">
             Jelenlegi jelszó:
           </label>
           <input className="w-full p-2 border border-gray-300 rounded" type="password" id="currentPassword" name="currentPassword" />
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700" htmlFor="newPassword">
+          <label className="block text-white" htmlFor="newPassword">
             Új jelszó:
           </label>
           <input className="w-full p-2 border border-gray-300 rounded" type="password" id="newPassword" name="newPassword" />
         </div>
         <div className="mb-4">
-          <label className="block text-gray-700" htmlFor="confirmPassword">
+          <label className="block text-white" htmlFor="confirmPassword">
             Jelszó megerősítése:
           </label>
           <input className="w-full p-2 border border-gray-300 rounded" type="password" id="confirmPassword" name="confirmPassword" />

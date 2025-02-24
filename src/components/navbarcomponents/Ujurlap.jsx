@@ -20,11 +20,10 @@ const Ujurlap = () => {
   };
 
   return (
-    <div className="flex flex-col items-center p-4">
+    <div className="flex flex-col items-center p-4 text-white">
       <div className="w-full max-w-4xl mb-4">
         <div className="flex justify-between items-center mb-8">
-          <div className="text-lg text-black font-newsreader">Új Űrlap</div>
-          <button className="bg-blue-500 text-white py-1 px-3 rounded">Űrlap Megnyitása</button>
+          <div className="text-lg text-w font-newsreader">Új Űrlap</div>
         </div>
         <div className="relative mb-8">
           <div className="absolute top-1/2 left-0 w-full transform -translate-y-1/2 h-1 bg-gray-200">
@@ -38,7 +37,7 @@ const Ujurlap = () => {
               <div key={number} className="flex flex-col items-center">
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                    step >= number ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'
+                    step >= number ? 'bg-blue-500 text-black' : 'bg-gray-200 text-black'
                   }`}
                   style={{ marginLeft: '-12px' }}
                 >

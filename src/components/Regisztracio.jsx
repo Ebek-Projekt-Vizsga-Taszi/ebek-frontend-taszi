@@ -50,7 +50,7 @@ const Regisztracio = () => {
 
       <div className="bg-gray-400 border border-black p-12 rounded-2xl shadow-lg w-[600px] relative">
         <div className="absolute top-4 right-4 w-14 translate-y-6">
-          <img src="Logo.png" alt="logo" />
+          <img src="LogoBlack.png" alt="logo" />
         </div>
 
         <h2 className="text-3xl font-bold mb-1 text-black">Regisztráció</h2>
