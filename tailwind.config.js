@@ -7,10 +7,25 @@ export default {
 		  "custom-bg": "url('/BackgroundPic.png')",
 		},
 		fontFamily: {
-		  newsreader: ['Newsreader', 'serif'],
+		  newsreader: ["Newsreader", "serif"],
+		},
+		animation: {
+		  shine: "shine var(--duration) infinite linear",
+		},
+		keyframes: {
+		  shine: {
+			"0%": {
+			  "background-position": "0% 0%",
+			},
+			"50%": {
+			  "background-position": "100% 100%",
+			},
+			to: {
+			  "background-position": "0% 0%",
+			},
+		  },
 		},
 	  },
 	},
 	plugins: [require("daisyui")],
   };
-  

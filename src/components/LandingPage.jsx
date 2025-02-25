@@ -7,7 +7,7 @@ const LandingPage = () => {
       <div className="flex items-center p-4">
         <div className="avatar mr-4">
           <div className="w-11 rounded">
-            <img src="Logo.png" alt="logo" />
+            <img src="LogoBlack.png" alt="logo" />
           </div>
         </div>
         <a className="text-lg text-black font-newsreader">Ebösszeíró</a>
