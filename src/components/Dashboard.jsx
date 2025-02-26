@@ -5,7 +5,8 @@ import Ujurlap from "./navbarcomponents/Ujurlap";
 import Ertesitesek from "./navbarcomponents/Ertesitesek";
 import Profil from "./navbarcomponents/Profil";
 import { startNotificationTimer } from "./navbarcomponents/Timer";
-import { Particles } from "./navbarcomponents/Particles";
+import { Particles } from "./navbarcomponents/Design/Particles"; // Javított import
+
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("Űrlapok");

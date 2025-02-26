@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Particles } from "./navbarcomponents/Particles";
+import { Particles } from "./navbarcomponents/Design/Particles";
 import { motion } from "framer-motion";
 
 const Navbar = ({ activeTab, setActiveTab, hasNotification }) => {

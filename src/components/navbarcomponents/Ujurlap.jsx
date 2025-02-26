@@ -3,9 +3,9 @@ import Step1 from "./steps/Step1";
 import Step2 from "./steps/Step2";
 import Step3 from "./steps/Step3";
 import Step4 from "./steps/Step4";
-import HoverButton from "./HoverButton";
-import { TextShimmer } from "./TextShimmer";
-import { ShineBorder } from "./ShineBorder";
+import HoverButton from "./Design/HoverButton"; // Javított import
+import { TextShimmer } from "./Design/TextShimmer"; // Javított import
+import { ShineBorder } from "./Design/ShineBorder"; // Javított import
 import { LoaderCircle, Check } from "lucide-react";
 
 const StepperContext = createContext(undefined);
