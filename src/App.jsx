@@ -5,6 +5,7 @@ import Iranyelvek from "./components/Iranyelvek";
 import Bejelentkezés from "./components/Bejelentkezés";
 import Regisztracio from "./components/Regisztracio";
 import Dashboard from "./components/Dashboard";
+import NotFound  from "./components/NotFound";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(null); // Kezdetben null
@@ -31,6 +32,7 @@ function App() {
             path="/Dashboard"
             element={isAuthenticated ? <Dashboard setIsAuthenticated={setIsAuthenticated} /> : <Navigate to="/Bejelentkezés" />}
           />
+          <Route path="/*" element={<NotFound/>}/>
         </Routes>
       </Router>
     </>

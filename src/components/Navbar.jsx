@@ -3,7 +3,8 @@ import { Particles } from "./navbarcomponents/Design/Particles";
 import { motion } from "framer-motion";
 
 const Navbar = ({ activeTab, setActiveTab, hasNotification }) => {
-  const [szervezet, setSzervezet] = useState(false);
+  // Szervezeti vagy felhasználói navigáció beállítása
+  const [szervezet, setSzervezet] = useState(false); //false = felhasználói navigáció, true = szervezeti navigáció
 
   const navbarOptions = {
     szervezet: [
@@ -21,6 +22,7 @@ const Navbar = ({ activeTab, setActiveTab, hasNotification }) => {
 
   return (
     <div className="relative">
+      {/* Háttér Particles */}
       <Particles
         className="absolute inset-0 z-0"
         quantity={150}
@@ -30,6 +32,8 @@ const Navbar = ({ activeTab, setActiveTab, hasNotification }) => {
         ease={40}
         refresh={false}
       />
+
+      {/* Navigációs sáv */}
       <div
         className="sticky top-0 left-1/2 -translate-x-1/2 z-50 mb-6 sm:pt-6"
         style={{
@@ -37,7 +41,7 @@ const Navbar = ({ activeTab, setActiveTab, hasNotification }) => {
           width: "100%",
           padding: "0 16px",
           marginTop: "16px",
-          userSelect: "none", // Itt tiltjuk le a kijelölést
+          userSelect: "none", // Kijelölés letiltása
         }}
       >
         <div
@@ -48,6 +52,7 @@ const Navbar = ({ activeTab, setActiveTab, hasNotification }) => {
             backdropFilter: "blur(1px)",
           }}
         >
+          {/* Logo és cím */}
           <div className="flex items-center">
             <div className="w-11 rounded">
               <img src="Logo.png" alt="logo" />
@@ -55,6 +60,7 @@ const Navbar = ({ activeTab, setActiveTab, hasNotification }) => {
             <a className="text-xl font-newsreader ml-2">Ebösszeíró</a>
           </div>
 
+          {/* Navigációs opciók */}
           <div className="flex items-center gap-3">
             {options.map((option) => {
               const isActive = activeTab === option.tab;
@@ -62,22 +68,24 @@ const Navbar = ({ activeTab, setActiveTab, hasNotification }) => {
               return (
                 <motion.div
                   key={option.tab}
-                  onClick={() => setActiveTab(option.tab)} // onClick eseménykezelő
+                  onClick={() => setActiveTab(option.tab)} // Kattintás eseménykezelő
                   className={cn(
                     "relative cursor-pointer text-sm font-semibold px-6 py-2 rounded-full transition-colors",
                     "text-foreground/80 hover:text-white",
                     isActive && "bg-muted text-white"
                   )}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  style={{ userSelect: "none" }} // Itt is tiltjuk le a kijelölést
+                  whileHover={{ scale: 1.05 }} // Egérrel való rámutatás animáció
+                  whileTap={{ scale: 0.95 }} // Kattintás animáció
+                  style={{ userSelect: "none" }} // Kijelölés letiltása
                 >
                   <span>{option.name}</span>
+                  {/* Értesítés ikon */}
                   {option.hasNotification && (
                     <span className="notification-icon" style={{ marginLeft: "5px" }}>
                       ⚠️
                     </span>
                   )}
+                  {/* Aktív lap animáció */}
                   {isActive && (
                     <motion.div
                       layoutId="lamp"
@@ -108,6 +116,7 @@ const Navbar = ({ activeTab, setActiveTab, hasNotification }) => {
 
 export default Navbar;
 
+// CSS osztályok kombinálása
 function cn(...classes) {
   return classes.filter(Boolean).join(" ");
 }
