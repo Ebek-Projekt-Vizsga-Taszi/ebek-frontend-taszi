@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const Iranyelvek = () => {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
+    <div className=" flex flex-col items-center justify-center min-h-screen">
       <div className="w-full max-w-4xl p-4">
         <h1 className="text-2xl font-bold translate-y-5 text-center">Adatvédelmi irányelvek</h1>
         <button className="btn btn-sm absolute right-4 top-5 text-white font-newsreader">
