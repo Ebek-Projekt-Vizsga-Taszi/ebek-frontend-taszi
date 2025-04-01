@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Background from "../components/Background";
 
 const Bejelentkezes = ({ setIsAuthenticated }) => {
   const navigate = useNavigate();
@@ -54,85 +55,89 @@ const Bejelentkezes = ({ setIsAuthenticated }) => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="relative bg-white border border-gray-300 p-10 rounded-2xl shadow-lg w-full max-w-md">
-        <Link to="/" className="absolute right-4 top-5">
-          <button className="btn btn-sm text-gray-700 font-medium hover:text-gray-900 transition-colors">
-            Vissza a kezdőlapra
-          </button>
-        </Link>
-
-        <div className="flex justify-center mb-2">
-          <img src="LogoBlack.png" alt="logo" className="h-12" />
-        </div>
-
-        <h2 className="text-2xl font-bold mb-1 text-center text-gray-800">Bejelentkezés</h2>
-        <p className="text-gray-600 text-center mb-8">az alkalmazásba</p>
-
-        {error && (
-          <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md text-sm">
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleLogin}>
-          <div className="mb-4">
-            <input
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
-              type="email"
-              name="email"
-              placeholder="Email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
-          </div>
-
-          <div className="mb-6 relative">
-            <input
-              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all"
-              type={showPassword ? "text" : "password"}
-              name="password"
-              placeholder="Jelszó"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
-            <button
-              type="button"
-              className="absolute inset-y-0 right-0 pr-3 flex items-center"
-              onClick={() => setShowPassword(!showPassword)}
-              aria-label={showPassword ? "Jelszó elrejtése" : "Jelszó megjelenítése"}
-            >
-              {showPassword ? (
-                <EyeOffIcon />
-              ) : (
-                <EyeIcon />
-              )}
+    <div className="relative min-h-screen">
+      <Background />
+      
+      <div className="flex items-center justify-center min-h-screen p-4">
+        <div className="relative bg-white/90 backdrop-blur-sm border border-gray-200 rounded-2xl shadow-lg w-full max-w-md p-8">
+          <Link to="/" className="absolute right-4 top-4">
+            <button className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
+              Vissza a kezdőlapra
             </button>
+          </Link>
+
+          <div className="flex justify-center mb-4">
+            <img src="LogoBlack.png" alt="logo" className="h-12" />
           </div>
 
-          <button
-            type="submit"
-            className="w-full p-3 bg-black text-white rounded-md font-semibold hover:bg-gray-800 transition-colors disabled:opacity-50"
-            disabled={isLoading}
-          >
-            {isLoading ? "Bejelentkezés..." : "Bejelentkezés"}
-          </button>
-        </form>
+          <h2 className="text-2xl font-bold mb-1 text-center text-gray-800">Bejelentkezés</h2>
+          <p className="text-gray-600 text-center mb-6">az alkalmazásba</p>
 
-        <p className="text-center text-sm mt-6 text-gray-600">
-          Még nem regisztrált?{" "}
-          <Link to="/Regisztracio" className="font-semibold text-black hover:underline">
-            Regisztráció
-          </Link>
-        </p>
+          {error && (
+            <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md text-sm">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleLogin}>
+            <div className="mb-4">
+              <input
+                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                type="email"
+                name="email"
+                placeholder="Email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+            </div>
+
+            <div className="mb-6 relative">
+              <input
+                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                type={showPassword ? "text" : "password"}
+                name="password"
+                placeholder="Jelszó"
+                value={formData.password}
+                onChange={handleChange}
+                required
+              />
+              <button
+                type="button"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                onClick={() => setShowPassword(!showPassword)}
+                aria-label={showPassword ? "Jelszó elrejtése" : "Jelszó megjelenítése"}
+              >
+                {showPassword ? (
+                  <EyeOffIcon />
+                ) : (
+                  <EyeIcon />
+                )}
+              </button>
+            </div>
+
+            <button
+              type="submit"
+              className="w-full p-3 bg-blue-600 text-white rounded-md font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50"
+              disabled={isLoading}
+            >
+              {isLoading ? "Bejelentkezés..." : "Bejelentkezés"}
+            </button>
+          </form>
+
+          <p className="text-center text-sm mt-6 text-gray-600">
+            Még nem regisztrált?{" "}
+            <Link to="/Regisztracio" className="font-semibold text-blue-600 hover:underline">
+              Regisztráció
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );
 };
 
-// Külön komponensek az ikonokhoz
+// Ikon komponensek
 const EyeIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
     <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />

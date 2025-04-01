@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Particles } from "./navbarcomponents/Design/Particles";
 import { motion, AnimatePresence } from "framer-motion";
+import Background from "./Background";
 
 const Navbar = ({ activeTab, setActiveTab, hasNotification }) => {
   const [szervezet, setSzervezet] = useState(false);
@@ -19,27 +19,27 @@ const Navbar = ({ activeTab, setActiveTab, hasNotification }) => {
 
   const options = szervezet ? navbarOptions.szervezet : navbarOptions.felhasznalo;
 
-  // Animációs változók
+  // Animációs beállítások
   const containerVariants = {
-    hidden: { opacity: 0, y: -20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2
-      }
-    }
-  };
-
-  const itemVariants = {
     hidden: { opacity: 0, y: -10 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
+        staggerChildren: 0.08,
+        delayChildren: 0.15
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: -5 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
         type: "spring",
-        stiffness: 200,
+        stiffness: 300,
         damping: 15
       }
     }
@@ -47,20 +47,19 @@ const Navbar = ({ activeTab, setActiveTab, hasNotification }) => {
 
   const buttonVariants = {
     hover: { 
-      scale: 1.05,
-      backgroundColor: "rgba(255, 255, 255, 0.1)"
+      backgroundColor: "rgba(255, 255, 255, 0.05)",
+      scale: 1.03
     },
     tap: { 
-      scale: 0.95,
-      backgroundColor: "rgba(255, 255, 255, 0.2)"
+      scale: 0.98,
+      backgroundColor: "rgba(255, 255, 255, 0.1)"
     }
   };
 
   const activeIndicatorVariants = {
-    hidden: { opacity: 0, scale: 0.8 },
+    hidden: { width: 0 },
     visible: {
-      opacity: 1,
-      scale: 1,
+      width: "100%",
       transition: {
         type: "spring",
         stiffness: 300,
@@ -71,42 +70,17 @@ const Navbar = ({ activeTab, setActiveTab, hasNotification }) => {
 
   return (
     <div className="relative">
-      {/* Háttér Particles */}
-      <Particles
-        className="absolute inset-0 z-0"
-        quantity={150}
-        color="#ffffff"
-        size={0.4}
-        staticity={60}
-        ease={40}
-        refresh={false}
-      />
-
-      {/* Navigációs sáv */}
+      <Background />
+      
       <motion.div
-        className="sticky top-0 left-1/2 -translate-x-1/2 z-50 mb-6 sm:pt-6"
-        style={{
-          maxWidth: "800px",
-          width: "100%",
-          padding: "0 16px",
-          marginTop: "16px",
-          userSelect: "none",
-        }}
+        className="sticky top-0 z-50 w-full py-4 px-4 sm:px-6"
         initial="hidden"
         animate="visible"
         variants={containerVariants}
       >
         <motion.div
-          className="flex items-center gap-3 bg-background/5 border border-border backdrop-blur-lg py-1 px-1 rounded-full shadow-lg"
-          style={{
-            backgroundColor: "rgba(29, 35, 42, 0.8)",
-            borderColor: "rgba(255, 255, 255, 0.1)",
-            backdropFilter: "blur(10px)",
-          }}
-          whileHover={{ 
-            backgroundColor: "rgba(29, 35, 42, 0.9)",
-            borderColor: "rgba(255, 255, 255, 0.2)"
-          }}
+          className="max-w-6xl mx-auto flex items-center justify-between bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-full px-4 py-2 shadow-sm"
+          variants={containerVariants}
         >
           {/* Logo és cím */}
           <motion.div 
@@ -114,87 +88,69 @@ const Navbar = ({ activeTab, setActiveTab, hasNotification }) => {
             variants={itemVariants}
           >
             <motion.div 
-              className="w-11 rounded"
-              whileHover={{ rotate: 5 }}
-              whileTap={{ rotate: -5 }}
+              className="w-10 h-10 rounded-lg overflow-hidden mr-3"
+              whileHover={{ rotate: 5, scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 300 }}
             >
-              <img src="Logo.png" alt="logo" />
+              <img src="Logo.png" alt="logo" className="w-full h-full object-contain" />
             </motion.div>
-            <motion.a 
-              className="text-xl font-newsreader ml-2"
-              whileHover={{ scale: 1.05 }}
+            <motion.h1 
+              className="text-xl font-bold text-gray-800 dark:text-white"
+              whileHover={{ scale: 1.02 }}
             >
               Ebösszeíró
-            </motion.a>
+            </motion.h1>
           </motion.div>
 
           {/* Navigációs opciók */}
-          <div className="flex items-center gap-3">
-            <AnimatePresence>
+          <motion.div 
+            className="flex items-center gap-1"
+            variants={containerVariants}
+          >
+            <AnimatePresence mode="wait">
               {options.map((option) => {
                 const isActive = activeTab === option.tab;
-
+                
                 return (
-                  <motion.div
+                  <motion.button
                     key={option.tab}
                     onClick={() => setActiveTab(option.tab)}
-                    className={cn(
-                      "relative cursor-pointer text-sm font-semibold px-6 py-2 rounded-full transition-colors",
-                      "text-foreground/80 hover:text-white",
-                      isActive && "text-white"
-                    )}
+                    className={`relative px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                      isActive 
+                        ? "text-blue-600 dark:text-blue-400" 
+                        : "text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                    }`}
                     variants={itemVariants}
                     whileHover="hover"
                     whileTap="tap"
                     initial="hidden"
                     animate="visible"
                     exit="hidden"
-                    style={{ userSelect: "none" }}
                   >
-                    <span>{option.name}</span>
+                    <span className="relative z-10">
+                      {option.name}
+                      {option.hasNotification && (
+                        <motion.span 
+                          className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          transition={{ type: "spring", stiffness: 500 }}
+                        />
+                      )}
+                    </span>
                     
-                    {/* Értesítés ikon */}
-                    {option.hasNotification && (
-                      <motion.span 
-                        className="notification-icon absolute -top-1 -right-1"
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ type: "spring", stiffness: 500 }}
-                      >
-                        <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                      </motion.span>
-                    )}
-                    
-                    {/* Aktív lap indikátor */}
                     {isActive && (
                       <motion.div
-                        layoutId="activeIndicator"
-                        className="absolute inset-0 w-full bg-white/10 rounded-full -z-10"
+                        className="absolute bottom-0 left-0 h-0.5 bg-blue-600 dark:bg-blue-400 rounded-full"
                         variants={activeIndicatorVariants}
-                      >
-                        <motion.div 
-                          className="absolute -top-2 left-1/2 -translate-x-1/2 w-8 h-1 bg-white rounded-t-full"
-                          variants={activeIndicatorVariants}
-                        >
-                          <motion.div 
-                            className="absolute w-12 h-6 bg-white/20 rounded-full blur-md -top-2 -left-2"
-                            animate={{
-                              opacity: [0.2, 0.4, 0.2],
-                            }}
-                            transition={{
-                              duration: 2,
-                              repeat: Infinity,
-                              ease: "easeInOut"
-                            }}
-                          />
-                        </motion.div>
-                      </motion.div>
+                        layoutId="activeIndicator"
+                      />
                     )}
-                  </motion.div>
+                  </motion.button>
                 );
               })}
             </AnimatePresence>
-          </div>
+          </motion.div>
         </motion.div>
       </motion.div>
     </div>
@@ -202,8 +158,3 @@ const Navbar = ({ activeTab, setActiveTab, hasNotification }) => {
 };
 
 export default Navbar;
-
-// CSS osztályok kombinálása
-function cn(...classes) {
-  return classes.filter(Boolean).join(" ");
-}

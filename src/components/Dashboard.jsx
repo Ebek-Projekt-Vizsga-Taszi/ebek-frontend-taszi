@@ -6,7 +6,7 @@ import Ujurlap from "./navbarcomponents/Ujurlap";
 import Ertesitesek from "./navbarcomponents/Ertesitesek";
 import Profil from "./navbarcomponents/Profil";
 import { startNotificationTimer } from "./navbarcomponents/Timer";
-import { Particles } from "./navbarcomponents/Design/Particles";
+import Background from "../components/Background";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("Űrlapok");
@@ -18,24 +18,35 @@ const Dashboard = () => {
 
   // Animációk konfigurációja
   const tabVariants = {
-    hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, y: 10 },
     visible: { 
       opacity: 1, 
       y: 0,
-      transition: { duration: 0.3, ease: "easeOut" }
+      transition: { 
+        duration: 0.25, 
+        ease: [0.16, 1, 0.3, 1],
+        when: "beforeChildren",
+        staggerChildren: 0.05
+      }
     },
     exit: { 
       opacity: 0, 
-      y: -20,
-      transition: { duration: 0.2, ease: "easeIn" }
+      y: -5,
+      transition: { 
+        duration: 0.2, 
+        ease: "easeIn" 
+      } 
     }
   };
 
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: { 
+    visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.1 }
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.1
+      }
     }
   };
 
@@ -51,13 +62,13 @@ const Dashboard = () => {
 
   return (
     <motion.div 
-      className="relative min-h-screen overflow-hidden"
+      className="relative min-h-screen bg-gray-50 dark:bg-gray-900"
       initial="hidden"
       animate="visible"
       variants={containerVariants}
     >
-      {/* Háttér Particles */}
-      <Particles className="absolute inset-0 -z-10" quantity={150} color="#ffffff" />
+      {/* Háttér komponens */}
+      <Background />
 
       {/* Navbar */}
       <Navbar 
@@ -67,7 +78,7 @@ const Dashboard = () => {
       />
 
       {/* Tartalom animációval */}
-      <div className="mt-16 p-4">
+      <div className="mt-4 px-4 pb-8 sm:px-6 lg:px-8">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
@@ -75,7 +86,7 @@ const Dashboard = () => {
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="w-full"
+            className="w-full bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden"
           >
             {getTabComponent()}
           </motion.div>
