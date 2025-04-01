@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "./Navbar";
 import Urlapok from "./navbarcomponents/Urlapok";
 import Ujurlap from "./navbarcomponents/Ujurlap";
 import Ertesitesek from "./navbarcomponents/Ertesitesek";
 import Profil from "./navbarcomponents/Profil";
 import { startNotificationTimer } from "./navbarcomponents/Timer";
-import { Particles } from "./navbarcomponents/Design/Particles"; // Javított import
-
+import { Particles } from "./navbarcomponents/Design/Particles";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("Űrlapok");
@@ -16,20 +16,72 @@ const Dashboard = () => {
     startNotificationTimer(setHasNotification);
   }, []);
 
+  // Animációk konfigurációja
+  const tabVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.3, ease: "easeOut" }
+    },
+    exit: { 
+      opacity: 0, 
+      y: -20,
+      transition: { duration: 0.2, ease: "easeIn" }
+    }
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1,
+      transition: { staggerChildren: 0.1 }
+    }
+  };
+
+  const getTabComponent = () => {
+    switch(activeTab) {
+      case "Űrlapok": return <Urlapok />;
+      case "Új űrlap": return <Ujurlap />;
+      case "Értesítések": return <Ertesitesek />;
+      case "Profil": return <Profil />;
+      default: return <Urlapok />;
+    }
+  };
+
   return (
-    <div className="relative min-h-screen overflow-hidden">
+    <motion.div 
+      className="relative min-h-screen overflow-hidden"
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+    >
       {/* Háttér Particles */}
       <Particles className="absolute inset-0 -z-10" quantity={150} color="#ffffff" />
 
-      {/* Tartalom réteg */}
-      <Navbar activeTab={activeTab} setActiveTab={setActiveTab} hasNotification={hasNotification} />
+      {/* Navbar */}
+      <Navbar 
+        activeTab={activeTab} 
+        setActiveTab={setActiveTab} 
+        hasNotification={hasNotification} 
+      />
+
+      {/* Tartalom animációval */}
       <div className="mt-16 p-4">
-        {activeTab === "Űrlapok" && <Urlapok />}
-        {activeTab === "Új űrlap" && <Ujurlap />}
-        {activeTab === "Értesítések" && <Ertesitesek />}
-        {activeTab === "Profil" && <Profil />}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeTab}
+            variants={tabVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            className="w-full"
+          >
+            {getTabComponent()}
+          </motion.div>
+        </AnimatePresence>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
