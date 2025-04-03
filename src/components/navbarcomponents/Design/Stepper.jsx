@@ -116,9 +116,9 @@ const StepperIndicator = React.forwardRef(({ className = "", ...props }, ref) =>
   return (
     <div
       ref={ref}
-      className={`relative flex items-center justify-center rounded-full border-2 border-gray-500 text-sm font-medium transition-colors ${
-        state === "active" ? "bg-white text-black" : ""
-      } ${state === "completed" ? "bg-white text-black" : "bg-gray-500 text-black"} ${className}`}
+      className={`relative flex items-center justify-center rounded-full border-2 border-red-500 text-sm font-medium transition-colors ${
+        state === "active" ? "bg-red text-green" : ""
+      } ${state === "completed" ? "bg-red text-black" : "bg-red-500 text-red"} ${className}`}
       style={{ width: 32, height: 32 }}
       data-state={state}
       {...props}

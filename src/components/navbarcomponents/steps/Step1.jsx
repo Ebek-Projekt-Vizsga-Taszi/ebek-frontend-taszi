@@ -7,13 +7,72 @@ const Step1 = ({ handleNext }) => {
     tulajdonosTel: "",
     tulajdonosEmail: "",
   });
+  
+  const [isLoading, setIsLoading] = useState(true);
+  const [dataSource, setDataSource] = useState("");
 
-  // Mentett adatok betöltése a localStorage-ból
+  // Felhasználó tulajdonosi adatainak lekérése
   useEffect(() => {
-    const savedData = JSON.parse(localStorage.getItem("formDataStep1")); // formDataStep1 használata
-    if (savedData) {
-      setFormData(savedData);
-    }
+    const fetchUserData = async () => {
+      try {
+        // Token lekérése a localStorage-ból
+        const token = localStorage.getItem("token");
+        
+        if (token) {
+          // Fetch API használata Axios helyett
+          const response = await fetch('/api/user/tulajdonos-adatok', {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${token}`,
+              'Content-Type': 'application/json'
+            }
+          });
+          
+          if (response.ok) {
+            const data = await response.json();
+            
+            // Szerver által visszaadott adatok betöltése
+            setFormData({
+              tulajdonosNeve: data.tulajdonosNeve || "",
+              tulajdonosCim: data.tulajdonosCim || "",
+              tulajdonosTel: data.tulajdonosTel || "",
+              tulajdonosEmail: data.tulajdonosEmail || "",
+            });
+            setDataSource("Fiókadatok");
+          } else {
+            // Ha nem sikerült lekérni a szerverről, próbálkozunk a localStorage-zal
+            loadFromLocalStorage();
+          }
+        } else {
+          // Ha nincs token, akkor nincs bejelentkezve a felhasználó
+          loadFromLocalStorage();
+        }
+      } catch (error) {
+        console.error("Hiba a tulajdonosi adatok betöltésekor:", error);
+        loadFromLocalStorage();
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    // Segédfüggvény a localStorage-ból való betöltéshez
+    const loadFromLocalStorage = () => {
+      const savedData = localStorage.getItem("formDataStep1");
+      if (savedData) {
+        try {
+          const parsedData = JSON.parse(savedData);
+          setFormData(parsedData);
+          setDataSource("Korábban megadott adatok");
+        } catch (e) {
+          console.error("Hibás formátumú mentett adat:", e);
+          setDataSource("Új adatok");
+        }
+      } else {
+        setDataSource("Új adatok");
+      }
+    };
+
+    fetchUserData();
   }, []);
 
   // Általános változáskezelő függvény
@@ -21,7 +80,7 @@ const Step1 = ({ handleNext }) => {
     const { name, value } = e.target;
     setFormData((prev) => {
       const updatedData = { ...prev, [name]: value };
-      localStorage.setItem("formDataStep1", JSON.stringify(updatedData)); // formDataStep1 mentése
+      localStorage.setItem("formDataStep1", JSON.stringify(updatedData));
       return updatedData;
     });
   };
@@ -43,7 +102,7 @@ const Step1 = ({ handleNext }) => {
 
     setFormData((prev) => {
       const updatedData = { ...prev, tulajdonosTel: formattedInput };
-      localStorage.setItem("formDataStep1", JSON.stringify(updatedData)); // Adatok mentése
+      localStorage.setItem("formDataStep1", JSON.stringify(updatedData));
       return updatedData;
     });
   };
@@ -59,9 +118,26 @@ const Step1 = ({ handleNext }) => {
     );
   };
 
+  if (isLoading) {
+    return <div className="text-white">Adatok betöltése...</div>;
+  }
+
   return (
     <div>
       <h2 className="text-2xl font-bold mb-4 text-white">Tulajdonos adatai</h2>
+      
+      {dataSource === "Fiókadatok" && (
+        <div className="mb-4 p-3 bg-blue-900 text-white rounded">
+          A fiókodhoz tartozó adatokat automatikusan betöltöttük. Szükség esetén módosíthatod őket.
+        </div>
+      )}
+      
+      {dataSource === "Korábban megadott adatok" && (
+        <div className="mb-4 p-3 bg-gray-700 text-white rounded">
+          A korábban megadott adataidat betöltöttük. Módosíthatod őket, ha szükséges.
+        </div>
+      )}
+      
       <form>
         {/* Név mező */}
         <div className="mb-4">
