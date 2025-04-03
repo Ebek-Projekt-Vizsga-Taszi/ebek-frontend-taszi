@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { Particles } from "./navbarcomponents/Design/Particles";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import Background from "./Background";
 
 const Navbar = ({ activeTab, setActiveTab, hasNotification }) => {
-  // Szervezeti vagy felhasználói navigáció beállítása
-  const [szervezet, setSzervezet] = useState(false); //false = felhasználói navigáció, true = szervezeti navigáció
+  const [szervezet, setSzervezet] = useState(false);
 
   const navbarOptions = {
     szervezet: [
@@ -20,103 +19,142 @@ const Navbar = ({ activeTab, setActiveTab, hasNotification }) => {
 
   const options = szervezet ? navbarOptions.szervezet : navbarOptions.felhasznalo;
 
+  // Animációs beállítások
+  const containerVariants = {
+    hidden: { opacity: 0, y: -10 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        staggerChildren: 0.08,
+        delayChildren: 0.15
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: -5 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 300,
+        damping: 15
+      }
+    }
+  };
+
+  const buttonVariants = {
+    hover: { 
+      backgroundColor: "rgba(255, 255, 255, 0.05)",
+      scale: 1.03
+    },
+    tap: { 
+      scale: 0.98,
+      backgroundColor: "rgba(255, 255, 255, 0.1)"
+    }
+  };
+
+  const activeIndicatorVariants = {
+    hidden: { width: 0 },
+    visible: {
+      width: "100%",
+      transition: {
+        type: "spring",
+        stiffness: 300,
+        damping: 20
+      }
+    }
+  };
+
   return (
     <div className="relative">
-      {/* Háttér Particles */}
-      <Particles
-        className="absolute inset-0 z-0"
-        quantity={150}
-        color="#ffffff"
-        size={0.4}
-        staticity={60}
-        ease={40}
-        refresh={false}
-      />
-
-      {/* Navigációs sáv */}
-      <div
-        className="sticky top-0 left-1/2 -translate-x-1/2 z-50 mb-6 sm:pt-6"
-        style={{
-          maxWidth: "800px",
-          width: "100%",
-          padding: "0 16px",
-          marginTop: "16px",
-          userSelect: "none", // Kijelölés letiltása
-        }}
+      <Background />
+      
+      <motion.div
+        className="sticky top-0 z-50 w-full py-4 px-4 sm:px-6"
+        initial="hidden"
+        animate="visible"
+        variants={containerVariants}
       >
-        <div
-          className="flex items-center gap-3 bg-background/5 border border-border backdrop-blur-lg py-1 px-1 rounded-full shadow-lg"
-          style={{
-            backgroundColor: "rgba(29, 35, 42)",
-            borderColor: "white",
-            backdropFilter: "blur(1px)",
-          }}
+        <motion.div
+          className="max-w-6xl mx-auto flex items-center justify-between bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-full px-4 py-2 shadow-sm"
+          variants={containerVariants}
         >
           {/* Logo és cím */}
-          <div className="flex items-center">
-            <div className="w-11 rounded">
-              <img src="Logo.png" alt="logo" />
-            </div>
-            <a className="text-xl font-newsreader ml-2">Ebösszeíró</a>
-          </div>
+          <motion.div 
+            className="flex items-center"
+            variants={itemVariants}
+          >
+            <motion.div 
+              className="w-10 h-10 rounded-lg overflow-hidden mr-3"
+              whileHover={{ rotate: 5, scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <img src="Logo.png" alt="logo" className="w-full h-full object-contain" />
+            </motion.div>
+            <motion.h1 
+              className="text-xl font-bold text-gray-800 dark:text-white"
+              whileHover={{ scale: 1.02 }}
+            >
+              Ebösszeíró
+            </motion.h1>
+          </motion.div>
 
           {/* Navigációs opciók */}
-          <div className="flex items-center gap-3">
-            {options.map((option) => {
-              const isActive = activeTab === option.tab;
-
-              return (
-                <motion.div
-                  key={option.tab}
-                  onClick={() => setActiveTab(option.tab)} // Kattintás eseménykezelő
-                  className={cn(
-                    "relative cursor-pointer text-sm font-semibold px-6 py-2 rounded-full transition-colors",
-                    "text-foreground/80 hover:text-white",
-                    isActive && "bg-muted text-white"
-                  )}
-                  whileHover={{ scale: 1.05 }} // Egérrel való rámutatás animáció
-                  whileTap={{ scale: 0.95 }} // Kattintás animáció
-                  style={{ userSelect: "none" }} // Kijelölés letiltása
-                >
-                  <span>{option.name}</span>
-                  {/* Értesítés ikon */}
-                  {option.hasNotification && (
-                    <span className="notification-icon" style={{ marginLeft: "5px" }}>
-                      ⚠️
+          <motion.div 
+            className="flex items-center gap-1"
+            variants={containerVariants}
+          >
+            <AnimatePresence mode="wait">
+              {options.map((option) => {
+                const isActive = activeTab === option.tab;
+                
+                return (
+                  <motion.button
+                    key={option.tab}
+                    onClick={() => setActiveTab(option.tab)}
+                    className={`relative px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                      isActive 
+                        ? "text-blue-600 dark:text-blue-400" 
+                        : "text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                    }`}
+                    variants={itemVariants}
+                    whileHover="hover"
+                    whileTap="tap"
+                    initial="hidden"
+                    animate="visible"
+                    exit="hidden"
+                  >
+                    <span className="relative z-10">
+                      {option.name}
+                      {option.hasNotification && (
+                        <motion.span 
+                          className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          transition={{ type: "spring", stiffness: 500 }}
+                        />
+                      )}
                     </span>
-                  )}
-                  {/* Aktív lap animáció */}
-                  {isActive && (
-                    <motion.div
-                      layoutId="lamp"
-                      className="absolute inset-0 w-full bg-white/5 rounded-full -z-10"
-                      initial={false}
-                      transition={{
-                        type: "spring",
-                        stiffness: 300,
-                        damping: 30,
-                      }}
-                    >
-                      <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-8 h-1 bg-white rounded-t-full">
-                        <div className="absolute w-12 h-6 bg-white/20 rounded-full blur-md -top-2 -left-2" />
-                        <div className="absolute w-8 h-6 bg-white/20 rounded-full blur-md -top-1" />
-                        <div className="absolute w-4 h-4 bg-white/20 rounded-full blur-sm top-0 left-2" />
-                      </div>
-                    </motion.div>
-                  )}
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </div>
+                    
+                    {isActive && (
+                      <motion.div
+                        className="absolute bottom-0 left-0 h-0.5 bg-blue-600 dark:bg-blue-400 rounded-full"
+                        variants={activeIndicatorVariants}
+                        layoutId="activeIndicator"
+                      />
+                    )}
+                  </motion.button>
+                );
+              })}
+            </AnimatePresence>
+          </motion.div>
+        </motion.div>
+      </motion.div>
     </div>
   );
 };
 
 export default Navbar;
-
-// CSS osztályok kombinálása
-function cn(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
