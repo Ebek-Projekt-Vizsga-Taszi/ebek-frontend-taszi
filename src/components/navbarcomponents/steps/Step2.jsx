@@ -14,6 +14,8 @@ const Step2 = ({ handleNext, handleBack }) => {
     ivartalanitasIdopontja: "",
   });
 
+  const [errors, setErrors] = useState({});
+
   // Mentett adatok betöltése a localStorage-ból
   useEffect(() => {
     const savedData = JSON.parse(localStorage.getItem("formDataStep2"));
@@ -25,44 +27,71 @@ const Step2 = ({ handleNext, handleBack }) => {
     }
   }, []);
 
+  // Mikrochip sorszám formázása (3-4-8 számjegy, szóközzel elválasztva)
+  const formatMicrochipNumber = (input) => {
+    const numbers = input.replace(/\D/g, "").substring(0, 15);
+    if (numbers.length <= 3) return numbers;
+    if (numbers.length <= 7) return `${numbers.substring(0, 3)} ${numbers.substring(3)}`;
+    return `${numbers.substring(0, 3)} ${numbers.substring(3, 7)} ${numbers.substring(7, 15)}`;
+  };
+
+  // Mikrochip sorszám validálása
+  const validateMicrochipNumber = (number) => {
+    const cleanNumber = number.replace(/\s/g, "");
+    return cleanNumber.length === 15 && /^\d+$/.test(cleanNumber);
+  };
+
   // Általános változáskezelő függvény
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => {
       const updatedData = { ...prev, [name]: value };
-      localStorage.setItem("formDataStep2", JSON.stringify(updatedData)); // Adatok mentése
+      localStorage.setItem("formDataStep2", JSON.stringify(updatedData));
       return updatedData;
     });
   };
 
-  // Dátum formázása (xxxx.xx.xx)
+  // Dátum formázása és korrekciója (xxxx.xx.xx)
   const handleDateChange = (e, fieldName) => {
-    const input = e.target.value.replace(/\D/g, ""); // Csak számokat tartunk meg
+    const input = e.target.value.replace(/\D/g, "");
     let formattedInput = "";
 
+    // Év rész (4 számjegy)
     if (input.length > 0) {
-      formattedInput += input.substring(0, 4); // Év (4 számjegy)
+      formattedInput += input.substring(0, 4);
     }
+
+    // Hónap rész (2 számjegy, 01-12)
     if (input.length > 4) {
-      formattedInput += "." + input.substring(4, 6); // Hónap (2 számjegy)
+      const month = input.substring(4, 6);
+      // Ha 00 van megadva, akkor 01-re állítjuk
+      const correctedMonth = month === '00' ? '01' : 
+                          (parseInt(month) > 12 ? '12' : month.padStart(2, '0'));
+      formattedInput += "." + correctedMonth;
     }
+
+    // Nap rész (2 számjegy, 01-31)
     if (input.length > 6) {
-      formattedInput += "." + input.substring(6, 8); // Nap (2 számjegy)
+      const day = input.substring(6, 8);
+      // Ha 00 van megadva, akkor 01-re állítjuk
+      const correctedDay = day === '00' ? '01' : 
+                         (parseInt(day) > 31 ? '31' : day.padStart(2, '0'));
+      formattedInput += "." + correctedDay;
     }
 
     setFormData((prev) => {
       const updatedData = { ...prev, [fieldName]: formattedInput };
-      localStorage.setItem("formDataStep2", JSON.stringify(updatedData)); // Adatok mentése
+      localStorage.setItem("formDataStep2", JSON.stringify(updatedData));
       return updatedData;
     });
   };
 
-  // Mikrochip sorszám (csak számok)
+  // Mikrochip sorszám változáskezelő
   const handleMicrochipNumberChange = (e) => {
-    const input = e.target.value.replace(/\D/g, ""); // Csak számokat tartunk meg
+    const formattedValue = formatMicrochipNumber(e.target.value);
     setFormData((prev) => {
-      const updatedData = { ...prev, mikrochipSorszam: input };
-      localStorage.setItem("formDataStep2", JSON.stringify(updatedData)); // Adatok mentése
+      const updatedData = { ...prev, mikrochipSorszam: formattedValue };
+      localStorage.setItem("formDataStep2", JSON.stringify(updatedData));
       return updatedData;
     });
   };
@@ -72,28 +101,50 @@ const Step2 = ({ handleNext, handleBack }) => {
     const { name, checked } = e.target;
     setFormData((prev) => {
       const updatedData = { ...prev, [name]: checked };
-      localStorage.setItem("formDataStep2", JSON.stringify(updatedData)); // Adatok mentése
+      localStorage.setItem("formDataStep2", JSON.stringify(updatedData));
       return updatedData;
     });
   };
 
   // Form érvényességének ellenőrzése
-  const isFormValid = () => {
-    const { ebHivoneve, ebFajtaja, ebNeme, ebSzulIdeje, ebSzine } = formData;
-    return (
-      ebHivoneve?.trim() !== "" &&
-      ebFajtaja?.trim() !== "" &&
-      ebNeme?.trim() !== "" &&
-      ebSzulIdeje?.trim() !== "" &&
-      ebSzine?.trim() !== ""
-    );
+  const validateForm = () => {
+    const newErrors = {};
+    const { 
+      ebHivoneve, 
+      ebFajtaja, 
+      ebNeme, 
+      ebSzulIdeje, 
+      ebSzine,
+      mikrochip,
+      mikrochipSorszam,
+      ivartalanitott,
+      ivartalanitasIdopontja
+    } = formData;
+
+    // Kötelező mezők
+    if (!ebHivoneve.trim()) newErrors.ebHivoneve = "Kötelező mező";
+    if (!ebFajtaja.trim()) newErrors.ebFajtaja = "Kötelező mező";
+    if (!ebSzulIdeje.trim()) newErrors.ebSzulIdeje = "Kötelező mező";
+    if (!ebSzine.trim()) newErrors.ebSzine = "Kötelező mező";
+
+    // Mikrochip validáció
+    if (mikrochip) {
+      if (!mikrochipSorszam) {
+        newErrors.mikrochipSorszam = "Kötelező mező";
+      } else if (!validateMicrochipNumber(mikrochipSorszam)) {
+        newErrors.mikrochipSorszam = "15 számjegyből kell állnia (pl. 123 4567 89012345)";
+      }
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleClickNext = useCallback(() => {
-    if (isFormValid()) {
+    if (validateForm()) {
       handleNext();
     }
-  }, [handleNext, isFormValid]);
+  }, [formData, handleNext]);
 
   const handleClickBack = useCallback(() => {
     handleBack();
@@ -106,23 +157,24 @@ const Step2 = ({ handleNext, handleBack }) => {
         {/* Eb hívóneve */}
         <div className="mb-4">
           <label htmlFor="ebHivoneve" className="block text-white font-newsreader mb-2">
-            Eb hívóneve:
+            Eb hívóneve: *
           </label>
           <input
             id="ebHivoneve"
-            className="border border-gray-300 p-2 w-full text-white bg-grey"
+            className={`border ${errors.ebHivoneve ? 'border-red-500' : 'border-gray-300'} p-2 w-full text-white bg-grey`}
             type="text"
             name="ebHivoneve"
             placeholder="Hívónév"
             value={formData.ebHivoneve}
             onChange={handleChange}
           />
+          {errors.ebHivoneve && <p className="text-red-500 text-sm mt-1">{errors.ebHivoneve}</p>}
         </div>
 
         {/* Eb törzskönyvi neve */}
         <div className="mb-4">
           <label htmlFor="ebTorzskonyviNeve" className="block text-white font-newsreader mb-2">
-            Eb törzskönyvi neve: Kitöltése nem kötelező
+            Eb törzskönyvi neve: (Nem kötelező)
           </label>
           <input
             id="ebTorzskonyviNeve"
@@ -138,23 +190,24 @@ const Step2 = ({ handleNext, handleBack }) => {
         {/* Eb fajtája */}
         <div className="mb-4">
           <label htmlFor="ebFajtaja" className="block text-white font-newsreader mb-2">
-            Eb fajtája:
+            Eb fajtája: *
           </label>
           <input
             id="ebFajtaja"
-            className="border border-gray-300 p-2 w-full text-white bg-grey"
+            className={`border ${errors.ebFajtaja ? 'border-red-500' : 'border-gray-300'} p-2 w-full text-white bg-grey`}
             type="text"
             name="ebFajtaja"
             placeholder="Fajta"
             value={formData.ebFajtaja}
             onChange={handleChange}
           />
+          {errors.ebFajtaja && <p className="text-red-500 text-sm mt-1">{errors.ebFajtaja}</p>}
         </div>
 
         {/* Eb neme */}
         <div className="mb-4">
           <label htmlFor="ebNeme" className="block text-white font-newsreader mb-2">
-            Eb neme: Szuka, Kan
+            Eb neme: *
           </label>
           <select
             id="ebNeme"
@@ -168,64 +221,67 @@ const Step2 = ({ handleNext, handleBack }) => {
           </select>
         </div>
 
-        {/* Eb születési ideje (xxxx.xx.xx) */}
+        {/* Eb születési ideje */}
         <div className="mb-4">
           <label htmlFor="ebSzulIdeje" className="block text-white font-newsreader mb-2">
-            Eb születési ideje: Dátum (xxxx.xx.xx)
+            Eb születési ideje: * (ÉÉÉÉ.HH.NN)
           </label>
           <input
             id="ebSzulIdeje"
-            className="border border-gray-300 p-2 w-full text-white bg-grey"
+            className={`border ${errors.ebSzulIdeje ? 'border-red-500' : 'border-gray-300'} p-2 w-full text-white bg-grey`}
             type="text"
             name="ebSzulIdeje"
             placeholder="ÉÉÉÉ.HH.NN"
             value={formData.ebSzulIdeje}
             onChange={(e) => handleDateChange(e, "ebSzulIdeje")}
           />
+          {errors.ebSzulIdeje && <p className="text-red-500 text-sm mt-1">{errors.ebSzulIdeje}</p>}
         </div>
 
         {/* Eb színe */}
         <div className="mb-4">
           <label htmlFor="ebSzine" className="block text-white font-newsreader mb-2">
-            Eb színe:
+            Eb színe: *
           </label>
           <input
             id="ebSzine"
-            className="border border-gray-300 p-2 w-full text-white bg-grey"
+            className={`border ${errors.ebSzine ? 'border-red-500' : 'border-gray-300'} p-2 w-full text-white bg-grey`}
             type="text"
             name="ebSzine"
             placeholder="Szín"
             value={formData.ebSzine}
             onChange={handleChange}
           />
+          {errors.ebSzine && <p className="text-red-500 text-sm mt-1">{errors.ebSzine}</p>}
         </div>
 
         {/* Mikrochip */}
         <div className="mb-4">
           <label className="block text-white font-newsreader mb-2">
-            Eb rendelkezik mikrochippel:
             <input
-              className="ml-2"
+              className="mr-2"
               type="checkbox"
               name="mikrochip"
               checked={formData.mikrochip}
               onChange={handleCheckboxChange}
             />
+            Eb rendelkezik mikrochippel
           </label>
           {formData.mikrochip && (
             <div className="mt-4">
               <label htmlFor="mikrochipSorszam" className="block text-white font-newsreader mb-2">
-                Mikrochip sorszáma:
+                Mikrochip sorszáma: *
               </label>
               <input
                 id="mikrochipSorszam"
-                className="border border-gray-300 p-2 w-full text-white bg-grey"
+                className={`border ${errors.mikrochipSorszam ? 'border-red-500' : 'border-gray-300'} p-2 w-full text-white bg-grey`}
                 type="text"
                 name="mikrochipSorszam"
-                placeholder="Csak számok"
+                placeholder="123 4567 89012345"
                 value={formData.mikrochipSorszam}
                 onChange={handleMicrochipNumberChange}
               />
+              {errors.mikrochipSorszam && <p className="text-red-500 text-sm mt-1">{errors.mikrochipSorszam}</p>}
             </div>
           )}
         </div>
@@ -233,19 +289,19 @@ const Step2 = ({ handleNext, handleBack }) => {
         {/* Ivartalanítás */}
         <div className="mb-4">
           <label className="block text-white font-newsreader mb-2">
-            Eb ivartalanított:
             <input
-              className="ml-2"
+              className="mr-2"
               type="checkbox"
               name="ivartalanitott"
               checked={formData.ivartalanitott}
               onChange={handleCheckboxChange}
             />
+            Eb ivartalanított
           </label>
           {formData.ivartalanitott && (
             <div className="mt-4">
               <label htmlFor="ivartalanitasIdopontja" className="block text-white font-newsreader mb-2">
-                Ivartalanításának időpontja: Dátum (xxxx.xx.xx)
+                Ivartalanításának időpontja: (ÉÉÉÉ.HH.NN)
               </label>
               <input
                 id="ivartalanitasIdopontja"
@@ -272,10 +328,7 @@ const Step2 = ({ handleNext, handleBack }) => {
           <button
             type="button"
             onClick={handleClickNext}
-            disabled={!isFormValid()}
-            className={`bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 w-full sm:w-auto ${
-              !isFormValid() ? "opacity-50 cursor-not-allowed" : ""
-            }`}
+            className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 w-full sm:w-auto"
           >
             Tovább
           </button>
@@ -284,7 +337,5 @@ const Step2 = ({ handleNext, handleBack }) => {
     </div>
   );
 };
-
-
 
 export default React.memo(Step2);
