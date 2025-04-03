@@ -11,70 +11,65 @@ const Step1 = ({ handleNext }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [dataSource, setDataSource] = useState("");
 
-  // Felhasználó tulajdonosi adatainak lekérése
+  // Felhasználó adatainak betöltése a komponens mountolásakor
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        // Token lekérése a localStorage-ból
-        const token = localStorage.getItem("token");
-        
-        if (token) {
-          // Fetch API használata Axios helyett
-          const response = await fetch('/api/user/tulajdonos-adatok', {
-            method: 'GET',
-            headers: {
-              'Authorization': `Bearer ${token}`,
-              'Content-Type': 'application/json'
-            }
-          });
-          
-          if (response.ok) {
-            const data = await response.json();
-            
-            // Szerver által visszaadott adatok betöltése
-            setFormData({
-              tulajdonosNeve: data.tulajdonosNeve || "",
-              tulajdonosCim: data.tulajdonosCim || "",
-              tulajdonosTel: data.tulajdonosTel || "",
-              tulajdonosEmail: data.tulajdonosEmail || "",
-            });
-            setDataSource("Fiókadatok");
-          } else {
-            // Ha nem sikerült lekérni a szerverről, próbálkozunk a localStorage-zal
-            loadFromLocalStorage();
+    fetchUserData();
+  }, []); // Üres függőségi tömb = csak egyszer fut le a mountoláskor
+
+  const fetchUserData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      
+      if (token) {
+        const response = await fetch('http://localhost:8000/felhasznalok/tulajdonos-adatok', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
           }
+        });
+        
+        if (response.ok) {
+          const data = await response.json();
+          setFormData({
+            tulajdonosNeve: data.tulajdonosNeve || "",
+            tulajdonosCim: data.tulajdonosCim || "",
+            tulajdonosTel: data.tulajdonosTel || "",
+            tulajdonosEmail: data.tulajdonosEmail || "",
+          });
+          setDataSource("Fiókadatok");
         } else {
-          // Ha nincs token, akkor nincs bejelentkezve a felhasználó
+          const errorData = await response.json();
+          console.error("Szerver hiba:", errorData.message);
           loadFromLocalStorage();
         }
-      } catch (error) {
-        console.error("Hiba a tulajdonosi adatok betöltésekor:", error);
-        loadFromLocalStorage();
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    // Segédfüggvény a localStorage-ból való betöltéshez
-    const loadFromLocalStorage = () => {
-      const savedData = localStorage.getItem("formDataStep1");
-      if (savedData) {
-        try {
-          const parsedData = JSON.parse(savedData);
-          setFormData(parsedData);
-          setDataSource("Korábban megadott adatok");
-        } catch (e) {
-          console.error("Hibás formátumú mentett adat:", e);
-          setDataSource("Új adatok");
-        }
       } else {
+        loadFromLocalStorage();
+      }
+    } catch (error) {
+      console.error("Hálózati hiba:", error);
+      loadFromLocalStorage();
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Segédfüggvény a localStorage-ból való betöltéshez
+  const loadFromLocalStorage = () => {
+    const savedData = localStorage.getItem("formDataStep1");
+    if (savedData) {
+      try {
+        const parsedData = JSON.parse(savedData);
+        setFormData(parsedData);
+        setDataSource("Korábban megadott adatok");
+      } catch (e) {
+        console.error("Hibás formátumú mentett adat:", e);
         setDataSource("Új adatok");
       }
-    };
-
-    fetchUserData();
-  }, []);
-
+    } else {
+      setDataSource("Új adatok");
+    }
+  };
   // Általános változáskezelő függvény
   const handleChange = (e) => {
     const { name, value } = e.target;
