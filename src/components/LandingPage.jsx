@@ -10,9 +10,9 @@ const LandingPage = () => {
       opacity: 1,
       transition: {
         staggerChildren: 0.2,
-        delayChildren: 0.3
-      }
-    }
+        delayChildren: 0.3,
+      },
+    },
   };
 
   const itemVariants = {
@@ -23,14 +23,14 @@ const LandingPage = () => {
       transition: {
         type: "spring",
         stiffness: 100,
-        damping: 10
-      }
-    }
+        damping: 10,
+      },
+    },
   };
 
   const buttonVariants = {
     hover: { scale: 1.05, boxShadow: "0px 5px 15px rgba(0,0,0,0.2)" },
-    tap: { scale: 0.95 }
+    tap: { scale: 0.95 },
   };
 
   return (
@@ -41,54 +41,31 @@ const LandingPage = () => {
       variants={containerVariants}
     >
       {/* Fejléc */}
-      <motion.div 
-        className="flex items-center p-4"
-        variants={itemVariants}
-      >
+      <motion.div className="flex items-center p-4" variants={itemVariants}>
         <div className="avatar mr-4">
-          <motion.div 
-            className="w-11 rounded"
-            whileHover={{ rotate: 10 }}
-          >
+          <motion.div className="w-11 rounded" whileHover={{ rotate: 10 }}>
             <img src="LogoBlack.png" alt="logo" />
           </motion.div>
         </div>
-        <motion.a 
-          className="text-lg text-black font-newsreader"
-          whileHover={{ scale: 1.05 }}
-        >
+        <motion.a className="text-lg text-black font-newsreader" whileHover={{ scale: 1.05 }}>
           Ebösszeíró
         </motion.a>
       </motion.div>
 
       {/* Fő szöveg */}
-      <motion.div 
-        className="absolute left-0 top-1/2 transform -translate-y-36 p-6 text-black font-newsreader"
-        variants={containerVariants}
-      >
-        {[
-          "Túl sokáig tart bejelenteni a kutyáit?",
-          "Velünk mindössze 5 perc,",
-          "és legközelebb elég pár kattintás!"
-        ].map((text, index) => (
-          <motion.p 
-            key={index}
-            className="text-2xl mb-2"
-            variants={itemVariants}
-          >
+      <motion.div className="absolute left-0 top-1/2 transform -translate-y-36 p-6 text-black font-newsreader" variants={containerVariants}>
+        {["Túl sokáig tart bejelenteni a kutyáit?", "Velünk mindössze 5 perc,", "és legközelebb elég pár kattintás!"].map((text, index) => (
+          <motion.p key={index} className="text-2xl mb-2" variants={itemVariants}>
             {text}
           </motion.p>
         ))}
       </motion.div>
 
       {/* Gombok */}
-      <motion.div 
-        className="absolute left-0 top-2/3 transform p-6 text-black font-newsreader flex space-x-9"
-        variants={containerVariants}
-      >
+      <motion.div className="absolute left-0 top-2/3 transform p-6 text-black font-newsreader flex space-x-9" variants={containerVariants}>
         <Link to="/Bejelentkezés">
           <motion.button
-            className="btn w-36 rounded-full bg-white hover:bg-gray-100 transition-colors"
+            className="btn w-36 rounded-full bg-black text-white hover:bg-gray-800 transition-colors"
             variants={buttonVariants}
             whileHover="hover"
             whileTap="tap"
@@ -109,16 +86,9 @@ const LandingPage = () => {
       </motion.div>
 
       {/* Lábléc */}
-      <motion.div 
-        className="absolute bottom-0 left-0 w-full p-4"
-        variants={itemVariants}
-      >
+      <motion.div className="absolute bottom-0 left-0 w-full p-4" variants={itemVariants}>
         <Link to="/Iranyelvek">
-          <motion.button
-            className="text-white hover:underline"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
+          <motion.button className="text-white hover:underline" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             Adatvédelmi irányelvek
           </motion.button>
         </Link>
