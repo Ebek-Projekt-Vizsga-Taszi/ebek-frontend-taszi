@@ -4,6 +4,7 @@ import Background from "./Background";
 
 const Navbar = ({ activeTab, setActiveTab, hasNotification }) => {
   const [szervezet, setSzervezet] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navbarOptions = {
     szervezet: [
@@ -68,6 +69,27 @@ const Navbar = ({ activeTab, setActiveTab, hasNotification }) => {
     }
   };
 
+  const menuVariants = {
+    open: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 300,
+        damping: 20
+      }
+    },
+    closed: {
+      opacity: 0,
+      y: -20,
+      transition: {
+        type: "spring",
+        stiffness: 300,
+        damping: 20
+      }
+    }
+  };
+
   return (
     <div className="relative">
       <Background />
@@ -95,16 +117,49 @@ const Navbar = ({ activeTab, setActiveTab, hasNotification }) => {
               <img src="Logo.png" alt="logo" className="w-full h-full object-contain" />
             </motion.div>
             <motion.h1 
-              className="text-xl font-bold text-gray-800 dark:text-white"
+              className="text-xl font-bold text-gray-800 dark:text-white hidden sm:block"
               whileHover={{ scale: 1.02 }}
             >
               Ebösszeíró
             </motion.h1>
           </motion.div>
 
-          {/* Navigációs opciók */}
+          {/* Mobile menu button */}
+          <motion.button
+            className="sm:hidden p-2 rounded-full"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            variants={itemVariants}
+            whileHover="hover"
+            whileTap="tap"
+          >
+            <svg
+              className="w-6 h-6 text-gray-600 dark:text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              {isMenuOpen ? (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              ) : (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              )}
+            </svg>
+          </motion.button>
+
+          {/* Desktop Navigációs opciók */}
           <motion.div 
-            className="flex items-center gap-1"
+            className="hidden sm:flex items-center gap-1"
             variants={containerVariants}
           >
             <AnimatePresence mode="wait">
@@ -152,6 +207,53 @@ const Navbar = ({ activeTab, setActiveTab, hasNotification }) => {
             </AnimatePresence>
           </motion.div>
         </motion.div>
+
+        {/* Mobile menu */}
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.div
+              className="sm:hidden mt-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg py-2"
+              initial="closed"
+              animate="open"
+              exit="closed"
+              variants={menuVariants}
+            >
+              {options.map((option) => {
+                const isActive = activeTab === option.tab;
+                
+                return (
+                  <motion.button
+                    key={option.tab}
+                    onClick={() => {
+                      setActiveTab(option.tab);
+                      setIsMenuOpen(false);
+                    }}
+                    className={`relative w-full px-4 py-3 text-left text-sm font-medium transition-colors ${
+                      isActive 
+                        ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30" 
+                        : "text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                    }`}
+                    variants={itemVariants}
+                    whileHover={{ backgroundColor: "rgba(0, 0, 0, 0.05)" }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <span className="relative z-10 flex items-center">
+                      {option.name}
+                      {option.hasNotification && (
+                        <motion.span 
+                          className="ml-2 w-2 h-2 bg-red-500 rounded-full"
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          transition={{ type: "spring", stiffness: 500 }}
+                        />
+                      )}
+                    </span>
+                  </motion.button>
+                );
+              })}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
     </div>
   );
