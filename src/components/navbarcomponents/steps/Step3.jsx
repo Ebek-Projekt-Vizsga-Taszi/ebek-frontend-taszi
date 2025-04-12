@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom"; // Új import
 
 const Step3 = ({ handleBack }) => {
-  const navigate = useNavigate(); // Új hook
+  const navigate = useNavigate();
   const [localFormData, setLocalFormData] = useState({
     utolsoOltasIdo: "",
     orvosiBelyegzoSzam: "",
@@ -16,6 +16,8 @@ const Step3 = ({ handleBack }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadSuccess, setLoadSuccess] = useState(false);
 
   // Mentett adatok betöltése
   useEffect(() => {
@@ -24,6 +26,53 @@ const Step3 = ({ handleBack }) => {
       setLocalFormData(savedDataStep3);
     }
   }, []);
+
+  // Mentett oltási adatok betöltése a szerverről
+  const loadSavedData = async () => {
+    setIsLoading(true);
+    setLoadSuccess(false);
+    setSubmitError(null);
+
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        console.log("Nincs token, kihagyjuk a szerverről történő betöltést");
+        return;
+      }
+
+      const response = await fetch("http://localhost:8000/felhasznalok/step2-adatok", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Hiba: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      // Frissítjük az állapotot a szerverről kapott adatokkal
+      const updatedData = {
+        utolsoOltasIdo: "",
+        orvosiBelyegzoSzam: data.utolsoOltas?.orvosiBelyegzoSzam || "",
+        oltanyagSorszam: data.utolsoOltas?.oltanyagSorszam || "",
+        oltasiKonyvSzam: data.oltasiKonyvSzam || "",
+        allatorvosBelyegzoSzam: data.utolsoUrlap?.oltasiBelyegzoSzam|| "",
+      };
+
+      setLocalFormData(updatedData);
+      localStorage.setItem("formDataStep3", JSON.stringify(updatedData));
+      setLoadSuccess(true);
+    } catch (error) {
+      console.error("Hiba az adatok betöltésekor:", error);
+      setSubmitError("Nem sikerült betölteni a mentett adatokat");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // Általános változáskezelő függvény
   const handleChange = (e) => {
@@ -98,14 +147,10 @@ const Step3 = ({ handleBack }) => {
   const isFormValid = () => {
     const { utolsoOltasIdo, orvosiBelyegzoSzam, oltasiKonyvSzam, allatorvosBelyegzoSzam } = localFormData;
     return (
-      utolsoOltasIdo?.trim() !== "" && 
-      orvosiBelyegzoSzam?.trim() !== "" && 
-      oltasiKonyvSzam?.trim() !== "" && 
-      allatorvosBelyegzoSzam?.trim() !== ""
+      utolsoOltasIdo?.trim() !== "" && orvosiBelyegzoSzam?.trim() !== "" && oltasiKonyvSzam?.trim() !== "" && allatorvosBelyegzoSzam?.trim() !== ""
     );
   };
 
-  // Küldés gomb eseménykezelője
   const handleClickSubmit = async () => {
     if (!isFormValid()) {
       setSubmitError("Kérjük töltsd ki az összes kötelező mezőt!");
@@ -131,7 +176,8 @@ const Step3 = ({ handleBack }) => {
         oltasiIdo: localFormData.utolsoOltasIdo,
         orvosiBelyegzoSzam: localFormData.orvosiBelyegzoSzam,
         oltasiKonyvSzam: localFormData.oltasiKonyvSzam,
-        oltasiBelyegzoSzam: localFormData.allatorvosBelyegzoSzam,
+        oltasiBelyegzoSzam: localFormData.allatorvosBelyegzoSzam, // Ez lesz az allatorvosBelyegzoszam
+        oltanyagSorszam: localFormData.oltanyagSorszam || null,
       };
 
       const token = localStorage.getItem("token");
@@ -147,31 +193,22 @@ const Step3 = ({ handleBack }) => {
       });
 
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Szerver válasza:", errorText);
-        throw new Error(`Szerver hiba: ${response.status} ${response.statusText}`);
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Szerver hiba");
       }
 
-      try {
-        const responseData = await response.json();
-        console.log("Szerver válasza:", responseData);
+      const responseData = await response.json();
+      console.log("Sikeres válasz:", responseData);
 
-        setSubmitSuccess(true);
-        
-        // Adatok törlése localStorage-ból
-        localStorage.removeItem("formDataStep1");
-        localStorage.removeItem("formDataStep2");
-        localStorage.removeItem("formDataStep3");
+      setSubmitSuccess(true);
 
-        // 3 másodperc múlva átirányítás a Step4-re
-        setTimeout(() => {
-          navigate("/step4"); // Vagy a megfelelő útvonalra
-        }, 2000);
+      // Adatok törlése localStorage-ból
+      localStorage.removeItem("formDataStep1");
+      localStorage.removeItem("formDataStep2");
+      localStorage.removeItem("formDataStep3");
 
-      } catch (jsonError) {
-        console.error("JSON parse hiba:", jsonError);
-        throw new Error("Érvénytelen JSON válasz a szervertől");
-      }
+      // Átirányítás 2 másodperc múlva
+      setTimeout(() => navigate("/Dashboard"), 2000);
     } catch (error) {
       console.error("Hiba történt a küldés során:", error);
       setSubmitError(error.message || "Hiba történt az adatok küldése során");
@@ -187,11 +224,21 @@ const Step3 = ({ handleBack }) => {
       {submitError && <div className="mb-4 p-3 bg-red-500 text-white rounded">{submitError}</div>}
 
       {submitSuccess && (
-        <div className="mb-4 p-3 bg-green-500 text-white rounded">
-          Sikeresen beküldted az űrlapot! Átirányítás a következő oldalra...
-        </div>
+        <div className="mb-4 p-3 bg-green-500 text-white rounded">Sikeresen beküldted az űrlapot! Átirányítás a következő oldalra...</div>
       )}
       <form>
+        <div className="mb-4">
+          <button
+            type="button"
+            onClick={loadSavedData}
+            disabled={isLoading}
+            className={`${isLoading ? "bg-gray-500" : "bg-green-500"} text-white py-2 px-4 rounded hover:bg-green-600 w-full sm:w-auto mb-2`}
+          >
+            {isLoading ? "Betöltés..." : "Mentett oltási adatok betöltése"}
+          </button>
+
+          {loadSuccess && <div className="p-2 bg-green-100 text-green-800 rounded">Sikeresen betöltöttük a mentett oltási adatokat!</div>}
+        </div>
         {/* Utolsó oltás időpontja */}
         <div className="mb-4">
           <label className="block text-white font-newsreader mb-2">Utolsó oltás időpontja:</label>
@@ -274,13 +321,7 @@ const Step3 = ({ handleBack }) => {
             Vissza
           </button>
 
-          <Button 
-            variant="contained" 
-            endIcon={<SendIcon />} 
-            onClick={handleClickSubmit} 
-            disabled={!isFormValid() || isSubmitting} 
-            className="flex-1"
-          >
+          <Button variant="contained" endIcon={<SendIcon />} onClick={handleClickSubmit} disabled={!isFormValid() || isSubmitting} className="flex-1">
             {isSubmitting ? "Küldés..." : "Küldés"}
           </Button>
         </div>
