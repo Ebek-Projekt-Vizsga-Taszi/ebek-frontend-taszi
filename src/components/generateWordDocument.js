@@ -70,7 +70,6 @@ export const generateWordDocument = async (formData) => {
           paragraphText("Oltási időpont", formatDate(formData.oltasiIdo)),
           paragraphText("Orvosi bélyegző szám", formData.orvosiBelyegzoSzam),
           paragraphText("Oltási könyv szám", formData.oltasiKonyvSzam),
-          paragraphText("Oltási bélyegző szám", formData.oltasiBelyegzoSzam),
           emptyLine(),
 
           // Egyéb adatok

@@ -14,32 +14,38 @@ const Urlapok = () => {
     const fetchForms = async () => {
       try {
         const token = localStorage.getItem("token");
-
+  
         if (!token) {
           throw new Error("Nincs érvényes token. Kérjük, jelentkezzen be újra.");
         }
-
+  
         const response = await fetch("http://localhost:8000/felhasznalok/bekuldott-urlapok", {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+  
+        if (response.status === 404) {
+          console.warn("Nem található űrlap (404) – üres lista visszaadása.");
+          setFormList([]);
+          return;
         }
-
+  
+        if (!response.ok) {
+          throw new Error("Nem sikerült lekérni az űrlapokat.");
+        }
+  
         const data = await response.json();
         setFormList(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error("Hiba az űrlapok betöltésekor:", error);
-        setError(error.message);
+        setError("Nem sikerült betölteni az adatokat. Kérjük, próbáld meg később újra.");
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchForms();
   }, []);
 
@@ -144,10 +150,11 @@ const Urlapok = () => {
 
       {/* Modal */}
       <Modal
+
         isOpen={isModalOpen}
         onRequestClose={closeModal}
         contentLabel="Űrlap részletei"
-        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-900 text-white p-6 rounded-lg shadow-lg max-w-3xl w-full max-h-[90vh] overflow-y-auto z-50"
+        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-900 text-white p-6 rounded-lg shadow-lg max-w-3xl w-full max-h-[90vh] overflow-y-auto z-50 caret-transparent"
         overlayClassName="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-40"
       >
         {selectedForm && (
@@ -244,9 +251,7 @@ const Urlapok = () => {
                   <p>
                     <span className="font-medium">Oltási könyv szám:</span> {selectedForm.oltasiKonyvSzam || "Nincs megadva"}
                   </p>
-                  <p>
-                    <span className="font-medium">Oltási bélyegző szám:</span> {selectedForm.oltasiBelyegzoSzam || "Nincs megadva"}
-                  </p>
+                 
                 </div>
               </div>
             </div>
