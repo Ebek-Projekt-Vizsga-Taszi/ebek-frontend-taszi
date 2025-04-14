@@ -36,7 +36,7 @@ const Step3 = ({ handleBack }) => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
-        console.log("Nincs token, kihagyjuk a szerverről történő betöltést");
+        // console.log("Nincs token, kihagyjuk a szerverről történő betöltést");
         return;
       }
 
@@ -198,7 +198,7 @@ const Step3 = ({ handleBack }) => {
       }
 
       const responseData = await response.json();
-      console.log("Sikeres válasz:", responseData);
+      // console.log("Sikeres válasz:", responseData);
 
       setSubmitSuccess(true);
 

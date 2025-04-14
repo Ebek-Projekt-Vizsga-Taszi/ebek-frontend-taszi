@@ -48,7 +48,7 @@ const Bejelentkezes = ({ setIsAuthenticated }) => {
       navigate("/Dashboard");
     } catch (err) {
       setError(err.message);
-      console.error("Bejelentkezési hiba:", err);
+       // console.error("Bejelentkezési hiba:", err);
     } finally {
       setIsLoading(false);
     }
@@ -67,7 +67,7 @@ const Bejelentkezes = ({ setIsAuthenticated }) => {
           </Link>
 
           <div className="flex justify-center mb-4">
-            <img src="/public/LogoBlack.png" alt="logo" className="h-12" />
+            <img src="/LogoBlack.png" alt="logo" className="h-12" />
           </div>
 
           <h2 className="text-2xl font-bold mb-1 text-center text-gray-800">Bejelentkezés</h2>

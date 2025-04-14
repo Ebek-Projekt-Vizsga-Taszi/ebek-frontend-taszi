@@ -36,7 +36,7 @@ const Step2 = ({ handleNext, handleBack }) => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
-        console.log("Nincs token, kihagyjuk a szerverről történő betöltést");
+        // console.log("Nincs token, kihagyjuk a szerverről történő betöltést");
         return;
       }
 

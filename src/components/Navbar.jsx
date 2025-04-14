@@ -114,7 +114,7 @@ const Navbar = ({ activeTab, setActiveTab, hasNotification }) => {
               whileHover={{ rotate: 5, scale: 1.05 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
-              <img src="/public/Logo.png" alt="logo" className="w-full h-full object-contain" />
+              <img src="/Logo.png" alt="logo" className="w-full h-full object-contain" />
             </motion.div>
             <motion.h1 
               className="text-xl font-bold text-gray-800 dark:text-white hidden sm:block"

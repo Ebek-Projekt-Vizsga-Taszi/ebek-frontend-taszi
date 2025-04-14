@@ -74,7 +74,7 @@ const Ujurlap = () => {
       ...finalData
     };
     
-    console.log("Űrlap adatok:", completeData);
+    // console.log("Űrlap adatok:", completeData);
     // Itt lehetne API hívás vagy más adatfeldolgozás
     alert("Űrlap sikeresen elküldve!");
     setShowSteps(false);

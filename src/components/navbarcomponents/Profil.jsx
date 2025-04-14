@@ -23,7 +23,7 @@ const Profil = () => {
     }
 
     // Jelszó módosítás logikája (pl. API hívás)
-    console.log("Jelszó módosítása:", { currentPassword, newPassword });
+    // console.log("Jelszó módosítása:", { currentPassword, newPassword });
 
     // Mezők ürítése
     setCurrentPassword("");
