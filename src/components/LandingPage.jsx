@@ -44,7 +44,7 @@ const LandingPage = () => {
       <motion.div className="flex items-center p-4" variants={itemVariants}>
         <div className="avatar mr-4">
           <motion.div className="w-11 rounded" whileHover={{ rotate: 10 }}>
-            <img src="LogoBlack.png" alt="logo" />
+            <img src="/public/LogoBlack.png" alt="logo" />
           </motion.div>
         </div>
         <motion.a className="text-lg text-black font-newsreader" whileHover={{ scale: 1.05 }}>

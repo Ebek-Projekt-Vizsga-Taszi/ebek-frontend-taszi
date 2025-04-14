@@ -1,11 +1,11 @@
 import React, { useState, createContext, useContext } from "react";
-import Step1 from "./steps/Step1";
-import Step2 from "./steps/Step2";
-import Step3 from "./steps/Step3";
-import Step4 from "./steps/Step4";
-import HoverButton from "./Design/HoverButton";
-import { TextShimmer } from "./Design/TextShimmer";
-import { ShineBorder } from "./Design/ShineBorder";
+import Step1 from "./navbarcomponents/steps/Step1";
+import Step2 from "./navbarcomponents/steps/Step2";
+import Step3 from "./navbarcomponents/steps/Step3";
+import Step4 from "./navbarcomponents/steps/Step4";
+import HoverButton from "./navbarcomponents/Design/HoverButton";
+import { TextShimmer } from "./navbarcomponents/Design/TextShimmer";
+import { ShineBorder } from "./navbarcomponents/Design/ShineBorder";
 import { LoaderCircle, Check } from "lucide-react";
 
 const StepperContext = createContext(undefined);

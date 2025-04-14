@@ -203,7 +203,7 @@ const Regisztracio = () => {
             className="flex justify-center mb-4"
             variants={itemVariants}
           >
-            <img src="LogoBlack.png" alt="logo" className="h-12" />
+            <img src="/public/LogoBlack.png" alt="logo" className="h-12" />
           </motion.div>
 
           {/* Title */}

@@ -10,14 +10,13 @@ import Regisztracio from "./components/Regisztracio";
 import NotFound from "./components/NotFound";
 
 // Dashboard illetve dashboard aloldalak importálása
-import Dashboard from "./components/Dashboard";
 import Urlapok from "./components/Urlapok";
-import UjUrlap from "./components/UjUrlap";
-import Ertesitesek from "./components/Ertesitesek";
-import Profil from "./components/Profil";
 
 // Navbar importálása, mely a dashboard layout részét képezi
 import Navbar from "./components/Navbar";
+import Ertesitesek from "./components/navbarcomponents/Ertesitesek";
+import Ujurlap from "./components/Ujurlap";
+import Profil from "./components/navbarcomponents/Profil";
 
 // Dashboard layout, mely a navigációs sávot és az Outlet-et tartalmazza
 const DashboardLayout = ({ setIsAuthenticated, hasNotification }) => {
@@ -85,7 +84,7 @@ function App() {
           
           {/* Dashboard aloldalak */}
           <Route path="Urlapok" element={<Urlapok />} />
-          <Route path="UjUrlap" element={<UjUrlap />} />
+          <Route path="UjUrlap" element={<Ujurlap />} />
           <Route path="Ertesitesek" element={<Ertesitesek />} />
           <Route path="Profil" element={<Profil />} />
           <Route path="*" element={<NotFound />} />

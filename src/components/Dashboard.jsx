@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Navbar from "./Navbar";
-import Urlapok from "./navbarcomponents/Urlapok";
-import Ujurlap from "./navbarcomponents/Ujurlap";
 import Ertesitesek from "./navbarcomponents/Ertesitesek";
 import Profil from "./navbarcomponents/Profil";
 import { startNotificationTimer } from "./navbarcomponents/Timer";
 import Background from "../components/Background";
+import Urlapok from "./Urlapok";
+import Ujurlap from "./Ujurlap";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("Űrlapok");
