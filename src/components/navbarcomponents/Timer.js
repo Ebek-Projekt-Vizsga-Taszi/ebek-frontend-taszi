@@ -14,4 +14,4 @@ export const startNotificationTimer = (setHasNotification) => {
       setNotifications([' Ne felejtse el kitölteni az Ebösszeíró lapot!']);
     }
   };
-  
+  //.
