@@ -1,2 +1,0 @@
-Ez egy egyszerű szöveges fájl.
-Használhatod jegyzetek, dokumentáció vagy egyéb szöveges tartalom tárolására. 
