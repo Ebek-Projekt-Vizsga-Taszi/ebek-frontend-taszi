@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
-
+import { generateWordDocument } from "./generateWordDocument";
 Modal.setAppElement("#root");
 
 const Urlapok = () => {
@@ -106,21 +106,11 @@ const Urlapok = () => {
           <table className="min-w-full divide-y divide-gray-700">
             <thead className="bg-gray-800">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                  Kutya neve
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                  Fajta
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                  Beküldés dátuma
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                  Állapot
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">
-                  Műveletek
-                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Kutya neve</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Fajta</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Beküldés dátuma</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Állapot</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Műveletek</th>
               </tr>
             </thead>
             <tbody className="bg-gray-900 divide-y divide-gray-700">
@@ -134,9 +124,7 @@ const Urlapok = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
                       className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        form.status === "elfogadva"
-                          ? "bg-green-500 text-green-100"
-                          : "bg-yellow-500 text-yellow-100"
+                        form.status === "elfogadva" ? "bg-green-500 text-green-100" : "bg-yellow-500 text-yellow-100"
                       }`}
                     >
                       {form.status === "elfogadva" ? "Elfogadva" : "Feldolgozás alatt"}
@@ -145,9 +133,6 @@ const Urlapok = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <button onClick={() => openModal(form)} className="text-blue-400 hover:text-blue-300 mr-3">
                       Részletek
-                    </button>
-                    <button onClick={() => downloadForm(form)} className="text-green-400 hover:text-green-300">
-                      Letöltés
                     </button>
                   </td>
                 </tr>
@@ -197,10 +182,18 @@ const Urlapok = () => {
               <div>
                 <h3 className="font-semibold text-lg mb-3 border-b pb-2">Tulajdonos adatai</h3>
                 <div className="space-y-2">
-                  <p><span className="font-medium">Név:</span> {selectedForm.tulajdonosNeve || "Nincs megadva"}</p>
-                  <p><span className="font-medium">Cím:</span> {selectedForm.tulajdonosCim || "Nincs megadva"}</p>
-                  <p><span className="font-medium">Telefon:</span> {selectedForm.tulajdonosTel || "Nincs megadva"}</p>
-                  <p><span className="font-medium">Email:</span> {selectedForm.tulajdonosEmail || "Nincs megadva"}</p>
+                  <p>
+                    <span className="font-medium">Név:</span> {selectedForm.tulajdonosNeve || "Nincs megadva"}
+                  </p>
+                  <p>
+                    <span className="font-medium">Cím:</span> {selectedForm.tulajdonosCim || "Nincs megadva"}
+                  </p>
+                  <p>
+                    <span className="font-medium">Telefon:</span> {selectedForm.tulajdonosTel || "Nincs megadva"}
+                  </p>
+                  <p>
+                    <span className="font-medium">Email:</span> {selectedForm.tulajdonosEmail || "Nincs megadva"}
+                  </p>
                 </div>
               </div>
 
@@ -208,13 +201,28 @@ const Urlapok = () => {
               <div>
                 <h3 className="font-semibold text-lg mb-3 border-b pb-2">Kutya adatai</h3>
                 <div className="space-y-2">
-                  <p><span className="font-medium">Hiv. név:</span> {selectedForm.ebHivoneve || "Nincs megadva"}</p>
-                  <p><span className="font-medium">Törzskönyvi név:</span> {selectedForm.ebTorzkonyviNeve || "Nincs megadva"}</p>
-                  <p><span className="font-medium">Fajta:</span> {selectedForm.ebFajtaja || "Nincs megadva"}</p>
-                  <p><span className="font-medium">Nem:</span> {selectedForm.ebNeme || "Nincs megadva"}</p>
-                  <p><span className="font-medium">Születési idő:</span> {selectedForm.ebSzulIdeje ? new Date(selectedForm.ebSzulIdeje).toLocaleDateString() : "Nincs megadva"}</p>
-                  <p><span className="font-medium">Szín:</span> {selectedForm.ebSzine || "Nincs megadva"}</p>
-                  <p><span className="font-medium">Chip sorszám:</span> {selectedForm.chipSorszam || "Nincs megadva"}</p>
+                  <p>
+                    <span className="font-medium">Hiv. név:</span> {selectedForm.ebHivoneve || "Nincs megadva"}
+                  </p>
+                  <p>
+                    <span className="font-medium">Törzskönyvi név:</span> {selectedForm.ebTorzkonyviNeve || "Nincs megadva"}
+                  </p>
+                  <p>
+                    <span className="font-medium">Fajta:</span> {selectedForm.ebFajtaja || "Nincs megadva"}
+                  </p>
+                  <p>
+                    <span className="font-medium">Nem:</span> {selectedForm.ebNeme || "Nincs megadva"}
+                  </p>
+                  <p>
+                    <span className="font-medium">Születési idő:</span>{" "}
+                    {selectedForm.ebSzulIdeje ? new Date(selectedForm.ebSzulIdeje).toLocaleDateString() : "Nincs megadva"}
+                  </p>
+                  <p>
+                    <span className="font-medium">Szín:</span> {selectedForm.ebSzine || "Nincs megadva"}
+                  </p>
+                  <p>
+                    <span className="font-medium">Chip sorszám:</span> {selectedForm.chipSorszam || "Nincs megadva"}
+                  </p>
                 </div>
               </div>
 
@@ -222,18 +230,33 @@ const Urlapok = () => {
               <div>
                 <h3 className="font-semibold text-lg mb-3 border-b pb-2">Orvosi adatok</h3>
                 <div className="space-y-2">
-                  <p><span className="font-medium">Ivartalanítás időpontja:</span> {selectedForm.ivartalanitasIdo ? new Date(selectedForm.ivartalanitasIdo).toLocaleDateString() : "Nincs megadva"}</p>
-                  <p><span className="font-medium">Oltási időpont:</span> {selectedForm.oltasiIdo ? new Date(selectedForm.oltasiIdo).toLocaleDateString() : "Nincs megadva"}</p>
-                  <p><span className="font-medium">Orvosi bélyegző szám:</span> {selectedForm.orvosiBelyegzoSzam || "Nincs megadva"}</p>
-                  <p><span className="font-medium">Oltási könyv szám:</span> {selectedForm.oltasiKonyvSzam || "Nincs megadva"}</p>
-                  <p><span className="font-medium">Oltási bélyegző szám:</span> {selectedForm.oltasiBelyegzoSzam || "Nincs megadva"}</p>
+                  <p>
+                    <span className="font-medium">Ivartalanítás időpontja:</span>{" "}
+                    {selectedForm.ivartalanitasIdo ? new Date(selectedForm.ivartalanitasIdo).toLocaleDateString() : "Nincs megadva"}
+                  </p>
+                  <p>
+                    <span className="font-medium">Oltási időpont:</span>{" "}
+                    {selectedForm.oltasiIdo ? new Date(selectedForm.oltasiIdo).toLocaleDateString() : "Nincs megadva"}
+                  </p>
+                  <p>
+                    <span className="font-medium">Orvosi bélyegző szám:</span> {selectedForm.orvosiBelyegzoSzam || "Nincs megadva"}
+                  </p>
+                  <p>
+                    <span className="font-medium">Oltási könyv szám:</span> {selectedForm.oltasiKonyvSzam || "Nincs megadva"}
+                  </p>
+                  <p>
+                    <span className="font-medium">Oltási bélyegző szám:</span> {selectedForm.oltasiBelyegzoSzam || "Nincs megadva"}
+                  </p>
                 </div>
               </div>
             </div>
 
             <div className="mt-6 flex justify-end space-x-3">
-              <button onClick={() => downloadForm(selectedForm)} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-                Letöltés
+              <button
+                onClick={() => selectedForm && generateWordDocument(selectedForm)}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+              >
+                Word letöltés
               </button>
               <button onClick={closeModal} className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded">
                 Bezárás
