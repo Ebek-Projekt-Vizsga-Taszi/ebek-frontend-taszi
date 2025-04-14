@@ -1,22 +1,11 @@
-// Navbar.js
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import Background from "./Background";
 
-// Leképezés a dashboard aloldalak route neveire
-const tabToRoute = {
-  "Űrlapok": "Urlapok",
-  "Új űrlap": "UjUrlap",
-  "Értesítések": "Ertesitesek",
-  "Profil": "Profil"
-};
-
 const Navbar = ({ activeTab, setActiveTab, hasNotification }) => {
-  const [szervezet] = useState(false);
+  const [szervezet, setSzervezet] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // A felhasználói (nem szervezeti) menü opciók
   const navbarOptions = {
     szervezet: [
       { name: "Űrlapok", tab: "Űrlapok" },
@@ -54,6 +43,17 @@ const Navbar = ({ activeTab, setActiveTab, hasNotification }) => {
         stiffness: 300,
         damping: 15
       }
+    }
+  };
+
+  const buttonVariants = {
+    hover: { 
+      backgroundColor: "rgba(255, 255, 255, 0.05)",
+      scale: 1.03
+    },
+    tap: { 
+      scale: 0.98,
+      backgroundColor: "rgba(255, 255, 255, 0.1)"
     }
   };
 
@@ -124,7 +124,7 @@ const Navbar = ({ activeTab, setActiveTab, hasNotification }) => {
             </motion.h1>
           </motion.div>
 
-          {/* Mobil menü gomb */}
+          {/* Mobile menu button */}
           <motion.button
             className="sm:hidden p-2 rounded-full"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -157,7 +157,7 @@ const Navbar = ({ activeTab, setActiveTab, hasNotification }) => {
             </svg>
           </motion.button>
 
-          {/* Asztali navigációs opciók */}
+          {/* Desktop Navigációs opciók */}
           <motion.div 
             className="hidden sm:flex items-center gap-1"
             variants={containerVariants}
@@ -165,50 +165,50 @@ const Navbar = ({ activeTab, setActiveTab, hasNotification }) => {
             <AnimatePresence mode="wait">
               {options.map((option) => {
                 const isActive = activeTab === option.tab;
+                
                 return (
-                  <Link key={option.tab} to={`/Dashboard/${tabToRoute[option.tab]}`}>
-                    <motion.button
-                      onClick={() => setActiveTab(option.tab)}
-                      className={`relative px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                        isActive 
-                          ? "text-blue-600 dark:text-blue-400" 
-                          : "text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
-                      }`}
-                      variants={itemVariants}
-                      whileHover="hover"
-                      whileTap="tap"
-                      initial="hidden"
-                      animate="visible"
-                      exit="hidden"
-                    >
-                      <span className="relative z-10">
-                        {option.name}
-                        {option.hasNotification && (
-                          <motion.span 
-                            className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            transition={{ type: "spring", stiffness: 500 }}
-                          />
-                        )}
-                      </span>
-                      
-                      {isActive && (
-                        <motion.div
-                          className="absolute bottom-0 left-0 h-0.5 bg-blue-600 dark:bg-blue-400 rounded-full"
-                          variants={activeIndicatorVariants}
-                          layoutId="activeIndicator"
+                  <motion.button
+                    key={option.tab}
+                    onClick={() => setActiveTab(option.tab)}
+                    className={`relative px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                      isActive 
+                        ? "text-blue-600 dark:text-blue-400" 
+                        : "text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                    }`}
+                    variants={itemVariants}
+                    whileHover="hover"
+                    whileTap="tap"
+                    initial="hidden"
+                    animate="visible"
+                    exit="hidden"
+                  >
+                    <span className="relative z-10">
+                      {option.name}
+                      {option.hasNotification && (
+                        <motion.span 
+                          className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          transition={{ type: "spring", stiffness: 500 }}
                         />
                       )}
-                    </motion.button>
-                  </Link>
+                    </span>
+                    
+                    {isActive && (
+                      <motion.div
+                        className="absolute bottom-0 left-0 h-0.5 bg-blue-600 dark:bg-blue-400 rounded-full"
+                        variants={activeIndicatorVariants}
+                        layoutId="activeIndicator"
+                      />
+                    )}
+                  </motion.button>
                 );
               })}
             </AnimatePresence>
           </motion.div>
         </motion.div>
 
-        {/* Mobil menü */}
+        {/* Mobile menu */}
         <AnimatePresence>
           {isMenuOpen && (
             <motion.div
@@ -220,35 +220,35 @@ const Navbar = ({ activeTab, setActiveTab, hasNotification }) => {
             >
               {options.map((option) => {
                 const isActive = activeTab === option.tab;
+                
                 return (
-                  <Link key={option.tab} to={`/Dashboard/${tabToRoute[option.tab]}`}>
-                    <motion.button
-                      onClick={() => {
-                        setActiveTab(option.tab);
-                        setIsMenuOpen(false);
-                      }}
-                      className={`relative w-full px-4 py-3 text-left text-sm font-medium transition-colors ${
-                        isActive 
-                          ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30" 
-                          : "text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
-                      }`}
-                      variants={itemVariants}
-                      whileHover={{ backgroundColor: "rgba(0, 0, 0, 0.05)" }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      <span className="relative z-10 flex items-center">
-                        {option.name}
-                        {option.hasNotification && (
-                          <motion.span 
-                            className="ml-2 w-2 h-2 bg-red-500 rounded-full"
-                            initial={{ scale: 0 }}
-                            animate={{ scale: 1 }}
-                            transition={{ type: "spring", stiffness: 500 }}
-                          />
-                        )}
-                      </span>
-                    </motion.button>
-                  </Link>
+                  <motion.button
+                    key={option.tab}
+                    onClick={() => {
+                      setActiveTab(option.tab);
+                      setIsMenuOpen(false);
+                    }}
+                    className={`relative w-full px-4 py-3 text-left text-sm font-medium transition-colors ${
+                      isActive 
+                        ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30" 
+                        : "text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                    }`}
+                    variants={itemVariants}
+                    whileHover={{ backgroundColor: "rgba(0, 0, 0, 0.05)" }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <span className="relative z-10 flex items-center">
+                      {option.name}
+                      {option.hasNotification && (
+                        <motion.span 
+                          className="ml-2 w-2 h-2 bg-red-500 rounded-full"
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          transition={{ type: "spring", stiffness: 500 }}
+                        />
+                      )}
+                    </span>
+                  </motion.button>
                 );
               })}
             </motion.div>
