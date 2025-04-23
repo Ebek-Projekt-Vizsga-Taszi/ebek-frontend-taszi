@@ -1,98 +1,146 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Profil = () => {
-  // Felhasználói adatok (példa)
-  const [userData, setUserData] = useState({
-    name: "Kovács János", // Példa név
-    email: "kovacs.janos@example.com", // Példa e-mail
-  });
+  const [userData, setUserData] = useState({ name: "", email: "" });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Jelszó módosítás állapotai
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordChangeStatus, setPasswordChangeStatus] = useState(null);
 
-  // Jelszó módosítás kezelése
-  const handlePasswordChange = (e) => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const res = await fetch("http://localhost:8000/felhasznalok/tulajdonos-adatok", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+
+        if (!res.ok) throw new Error("Hiba történt a lekérés során");
+
+        const data = await res.json();
+
+        setUserData({
+          name: data.tulajdonosNeve,
+          email: data.tulajdonosEmail,
+        });
+        setLoading(false);
+      } catch (err) {
+        console.error("Hiba az adatok lekérésekor:", err);
+        setError("Hiba történt az adatok lekérésekor");
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  const handlePasswordChange = async (e) => {
     e.preventDefault();
 
-    // Jelszavak ellenőrzése
     if (newPassword !== confirmPassword) {
-      alert("Az új jelszó és a megerősítés nem egyezik!");
+      setPasswordChangeStatus("Az új jelszó és a megerősítés nem egyezik!");
       return;
     }
 
-    // Jelszó módosítás logikája (pl. API hívás)
-    // console.log("Jelszó módosítása:", { currentPassword, newPassword });
+    try {
+      const res = await fetch("http://localhost:8000/felhasznalok/jelszo-valtoztatas", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({ currentPassword, newPassword }),
+      });
 
-    // Mezők ürítése
-    setCurrentPassword("");
-    setNewPassword("");
-    setConfirmPassword("");
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        setPasswordChangeStatus("Jelszó sikeresen megváltoztatva!");
+        setCurrentPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+      } else {
+        setPasswordChangeStatus(data.message || "Hiba történt a jelszó módosításakor");
+      }
+    } catch (err) {
+      console.error("Hiba a jelszó módosításakor:", err);
+      setPasswordChangeStatus("Hiba történt a jelszó módosításakor");
+    }
   };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  };
+
+  if (loading) return <div className="text-white p-4">Betöltés...</div>;
+  if (error) return <div className="text-red-500 p-4">{error}</div>;
 
   return (
     <div className="container mx-auto p-4">
-      {/* Felhasználói adatok */}
       <h2 className="text-3xl font-bold mb-4">Profil Információk</h2>
-      <div className="mb-6">
-        <p className="text-white">
-          <strong>Név:</strong> {userData.name}
-        </p>
-        <p className="text-white">
-          <strong>E-mail cím:</strong> {userData.email}
-        </p>
+      <div className="mb-6 text-white">
+        <p><strong>Név:</strong> {userData.name}</p>
+        <p><strong>E-mail:</strong> {userData.email}</p>
       </div>
 
-      {/* Jelszó módosítás */}
-      <h2 className="text-3xl font-bold mb-4 mt-8">Jelszó módosítása</h2>
+      <button
+        onClick={handleLogout}
+        className="mb-8 bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600"
+      >
+        Kijelentkezés
+      </button>
+
+      <h2 className="text-3xl font-bold mb-4">Jelszó módosítása</h2>
+      {passwordChangeStatus && (
+        <div className={`mb-4 p-2 rounded ${
+          passwordChangeStatus.includes("sikeresen") ? "bg-green-500" : "bg-red-500"
+        } text-white`}>
+          {passwordChangeStatus}
+        </div>
+      )}
       <form onSubmit={handlePasswordChange}>
         <div className="mb-4">
-          <label className="block text-white" htmlFor="currentPassword">
-            Jelenlegi jelszó:
-          </label>
+          <label htmlFor="currentPassword" className="text-white block">Jelenlegi jelszó:</label>
           <input
-            className="w-full p-2 border border-gray-300 rounded"
-            type="password"
             id="currentPassword"
-            name="currentPassword"
+            type="password"
+            className="w-full p-2 border rounded"
             value={currentPassword}
             onChange={(e) => setCurrentPassword(e.target.value)}
             required
           />
         </div>
         <div className="mb-4">
-          <label className="block text-white" htmlFor="newPassword">
-            Új jelszó:
-          </label>
+          <label htmlFor="newPassword" className="text-white block">Új jelszó:</label>
           <input
-            className="w-full p-2 border border-gray-300 rounded"
-            type="password"
             id="newPassword"
-            name="newPassword"
+            type="password"
+            className="w-full p-2 border rounded"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
             required
           />
         </div>
         <div className="mb-4">
-          <label className="block text-white" htmlFor="confirmPassword">
-            Jelszó megerősítése:
-          </label>
+          <label htmlFor="confirmPassword" className="text-white block">Jelszó megerősítése:</label>
           <input
-            className="w-full p-2 border border-gray-300 rounded"
-            type="password"
             id="confirmPassword"
-            name="confirmPassword"
+            type="password"
+            className="w-full p-2 border rounded"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
         </div>
-        <button
-          type="submit"
-          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
-        >
+        <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">
           Jelszó mentése
         </button>
       </form>
