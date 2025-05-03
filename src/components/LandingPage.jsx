@@ -41,15 +41,27 @@ const LandingPage = () => {
       variants={containerVariants}
     >
       {/* Fejléc */}
-      <motion.div className="flex items-center p-4" variants={itemVariants}>
-        <div className="avatar mr-4">
-          <motion.div className="w-11 rounded" whileHover={{ rotate: 10 }}>
-            <img src="/LogoBlack.png" alt="logo" />
-          </motion.div>
+      <motion.div className="flex items-center justify-between p-4" variants={itemVariants}>
+        <div className="flex items-center">
+          <div className="avatar mr-4">
+            <motion.div className="w-11 rounded" whileHover={{ rotate: 10 }}>
+              <img src="/LogoBlack.png" alt="logo" />
+            </motion.div>
+          </div>
+          <motion.a className="text-lg text-black font-newsreader" whileHover={{ scale: 1.05 }}>
+            Ebösszeíró
+          </motion.a>
         </div>
-        <motion.a className="text-lg text-black font-newsreader" whileHover={{ scale: 1.05 }}>
-          Ebösszeíró
-        </motion.a>
+        <Link to="/SzervezetBejelentkezes">
+          <motion.button
+            className="btn w-36 rounded-full bg-black text-white hover:bg-gray-800 transition-colors"
+            variants={buttonVariants}
+            whileHover="hover"
+            whileTap="tap"
+          >
+            Szervezeti belépés
+          </motion.button>
+        </Link>
       </motion.div>
 
       {/* Fő szöveg */}

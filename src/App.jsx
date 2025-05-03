@@ -8,6 +8,8 @@ import Iranyelvek from "./components/Iranyelvek";
 import Bejelentkezés from "./components/Bejelentkezés";
 import Regisztracio from "./components/Regisztracio";
 import NotFound from "./components/NotFound";
+import SzervezetBejelentkezes from "./components/SzervezetBejelentkezes";
+import SzervezetDashboard from "./components/SzervezetDashboard";
 
 // Dashboard illetve dashboard aloldalak importálása
 import Urlapok from "./components/Urlapok";
@@ -46,17 +48,31 @@ const DashboardLayout = ({ setIsAuthenticated, hasNotification }) => {
   );
 };
 
+// Szervezeti layout
+const SzervezetLayout = () => {
+  return (
+    <div>
+      <div className="p-4">
+        <Outlet />
+      </div>
+    </div>
+  );
+};
+
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
+  const [isOrganizationAuthenticated, setIsOrganizationAuthenticated] = useState(null);
 
   // Az autentikáció ellenőrzése (például egy token alapján a localStorage-ból)
   useEffect(() => {
     const token = localStorage.getItem("token");
+    const orgToken = localStorage.getItem("orgToken");
     setIsAuthenticated(!!token);
+    setIsOrganizationAuthenticated(!!orgToken);
   }, []);
 
-  // Ha az autentikáció ellenőrzése még folyamatban van, nem rendereljük az alkalmazást (vagy megjelenítünk egy loading spinner-t)
-  if (isAuthenticated === null) {
+  // Ha az autentikáció ellenőrzése még folyamatban van, nem rendereljük az alkalmazást
+  if (isAuthenticated === null || isOrganizationAuthenticated === null) {
     return null;
   }
 
@@ -67,6 +83,7 @@ function App() {
         <Route path="/Iranyelvek" element={<Iranyelvek />} />
         <Route path="/Bejelentkezés" element={<Bejelentkezés setIsAuthenticated={setIsAuthenticated} />} />
         <Route path="/Regisztracio" element={<Regisztracio />} />
+        <Route path="/SzervezetBejelentkezes" element={<SzervezetBejelentkezes setIsOrganizationAuthenticated={setIsOrganizationAuthenticated} />} />
         
         {/* Védett Dashboard útvonal */}
         <Route
@@ -88,6 +105,20 @@ function App() {
           <Route path="Ertesitesek" element={<Ertesitesek />} />
           <Route path="Profil" element={<Profil />} />
           <Route path="*" element={<NotFound />} />
+        </Route>
+
+        {/* Védett Szervezeti útvonal */}
+        <Route
+          path="/SzervezetDashboard"
+          element={
+            isOrganizationAuthenticated ? (
+              <SzervezetLayout />
+            ) : (
+              <Navigate to="/SzervezetBejelentkezes" replace />
+            )
+          }
+        >
+          <Route index element={<SzervezetDashboard />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />

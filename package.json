@@ -25,6 +25,7 @@
     "docx": "^9.3.0",
     "file-saver": "^2.0.5",
     "framer-motion": "^12.4.7",
+    "jspdf": "^2.5.1",
     "lucide-react": "^0.475.0",
     "next": "^15.1.7",
     "react": "^18.3.1",
