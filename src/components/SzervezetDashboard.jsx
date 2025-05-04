@@ -76,7 +76,7 @@ const SzervezetDashboard = () => {
       if (!response.ok) {
         throw new Error('Hiba történt az űrlap jóváhagyása során');
       }
-      fetchForms(); // Refresh the forms list
+      fetchForms(); 
     } catch (error) {
       console.error('Error approving form:', error);
     }
@@ -93,7 +93,7 @@ const SzervezetDashboard = () => {
       if (!response.ok) {
         throw new Error('Hiba történt az űrlap elutasítása során');
       }
-      fetchForms(); // Refresh the forms list
+      fetchForms(); 
     } catch (error) {
       console.error('Error rejecting form:', error);
     }
@@ -103,10 +103,8 @@ const SzervezetDashboard = () => {
     try {
       const doc = new jsPDF();
       
-      // Set font to Arial to support Hungarian characters
       doc.setFont('Arial');
       
-      // Add form data to PDF
       doc.setFontSize(16);
       doc.text('Urlap adatai', 20, 20);
       
@@ -149,7 +147,6 @@ const SzervezetDashboard = () => {
         </button>
       </div>
       
-      {/* Filters and Search */}
       <div className="mb-6 flex flex-wrap gap-4">
         <div className="flex items-center space-x-4">
           <label className="text-sm font-medium">Rendezés:</label>
@@ -175,7 +172,6 @@ const SzervezetDashboard = () => {
         </div>
       </div>
 
-      {/* Forms Table */}
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border">
           <thead>
