@@ -103,9 +103,12 @@ const SzervezetDashboard = () => {
     try {
       const doc = new jsPDF();
       
+      // Set font to Arial to support Hungarian characters
+      doc.setFont('Arial');
+      
       // Add form data to PDF
       doc.setFontSize(16);
-      doc.text('Űrlap adatai', 20, 20);
+      doc.text('Urlap adatai', 20, 20);
       
       doc.setFontSize(12);
       doc.text(`Tulajdonos neve: ${form.tulajdonosNeve || 'N/A'}`, 20, 40);
@@ -121,7 +124,7 @@ const SzervezetDashboard = () => {
       doc.text(`Chip sorszáma: ${form.chipSorszam || 'N/A'}`, 20, 140);
       
       doc.text(`Beküldés dátuma: ${form.bekuldesDatuma ? new Date(form.bekuldesDatuma).toLocaleDateString() : 'N/A'}`, 20, 160);
-      doc.text(`Státusz: ${form.status || 'Feldolgozás alatt'}`, 20, 170);
+      doc.text(`Státusz: ${form.status === 'elfogadva' ? 'Elfogadva' : form.status === 'elutasitva' ? 'Elutasítva' : 'Feldolgozás alatt'}`, 20, 170);
       
       doc.save(`urlap_${form.id}.pdf`);
     } catch (error) {
@@ -129,9 +132,22 @@ const SzervezetDashboard = () => {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('orgToken');
+    navigate('/SzervezetBejelentkezes');
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Szervezeti Irányítópult</h1>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold">Szervezeti Irányítópult</h1>
+        <button
+          onClick={handleLogout}
+          className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors duration-200"
+        >
+          Kijelentkezés
+        </button>
+      </div>
       
       {/* Filters and Search */}
       <div className="mb-6 flex flex-wrap gap-4">
@@ -194,7 +210,21 @@ const SzervezetDashboard = () => {
                   {form.bekuldesDatuma ? new Date(form.bekuldesDatuma).toLocaleDateString() : 'N/A'}
                 </td>
                 <td className="px-6 py-4 border-b border-gray-200">
-                  {form.status || 'Feldolgozás alatt'}
+                  <span
+                    className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                      form.status === "elfogadva" 
+                        ? "bg-green-500 text-green-100" 
+                        : form.status === "elutasitva"
+                        ? "bg-red-500 text-red-100"
+                        : "bg-yellow-500 text-yellow-100"
+                    }`}
+                  >
+                    {form.status === "elfogadva" 
+                      ? "Elfogadva" 
+                      : form.status === "elutasitva"
+                      ? "Elutasítva"
+                      : "Feldolgozás alatt"}
+                  </span>
                 </td>
                 <td className="px-6 py-4 border-b border-gray-200">
                   <div className="flex space-x-2">
@@ -213,6 +243,12 @@ const SzervezetDashboard = () => {
                           Elutasít
                         </button>
                       </>
+                    )}
+                    {form.status === 'elfogadva' && form.szervezetId && (
+                      <span className="text-green-600 font-medium">Elfogadva</span>
+                    )}
+                    {form.status === 'elutasitva' && form.szervezetId && (
+                      <span className="text-red-600 font-medium">Elutasitva</span>
                     )}
                     <button
                       onClick={() => downloadPDF(form)}

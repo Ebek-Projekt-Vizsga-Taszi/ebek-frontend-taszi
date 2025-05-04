@@ -130,10 +130,18 @@ const Urlapok = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span
                       className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        form.status === "elfogadva" ? "bg-green-500 text-green-100" : "bg-yellow-500 text-yellow-100"
+                        form.status === "elfogadva" 
+                          ? "bg-green-500 text-green-100" 
+                          : form.status === "elutasitva"
+                          ? "bg-red-500 text-red-100"
+                          : "bg-yellow-500 text-yellow-100"
                       }`}
                     >
-                      {form.status === "elfogadva" ? "Elfogadva" : "Feldolgozás alatt"}
+                      {form.status === "elfogadva" 
+                        ? "Elfogadva" 
+                        : form.status === "elutasitva"
+                        ? "Elutasítva"
+                        : "Feldolgozás alatt"}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">

@@ -56,11 +56,11 @@ const Step3 = ({ handleBack }) => {
 
       // Frissítjük az állapotot a szerverről kapott adatokkal
       const updatedData = {
-        utolsoOltasIdo: "",
+        utolsoOltasIdo: data.utolsoOltas?.oltasiIdo || "",
         orvosiBelyegzoSzam: data.utolsoOltas?.orvosiBelyegzoSzam || "",
         oltanyagSorszam: data.utolsoOltas?.oltanyagSorszam || "",
         oltasiKonyvSzam: data.oltasiKonyvSzam || "",
-        allatorvosBelyegzoSzam: data.utolsoUrlap?.oltasiBelyegzoSzam|| "",
+        allatorvosBelyegzoSzam: data.utolsoOltas?.oltasiBelyegzoSzam || "",
       };
 
       setLocalFormData(updatedData);
@@ -162,9 +162,16 @@ const Step3 = ({ handleBack }) => {
     setSubmitSuccess(false);
 
     try {
+      const savedDataStep1 = JSON.parse(localStorage.getItem("formDataStep1"));
       const savedDataStep2 = JSON.parse(localStorage.getItem("formDataStep2"));
 
       const requestData = {
+        // Step1 adatok
+        tulajdonosNeve: savedDataStep1.tulajdonosNeve,
+        tulajdonosCim: savedDataStep1.tulajdonosCim,
+        tulajdonosTel: savedDataStep1.tulajdonosTel,
+        tulajdonosEmail: savedDataStep1.tulajdonosEmail,
+        // Step2 adatok
         ebHivoneve: savedDataStep2.ebHivoneve,
         ebTorzkonyviNeve: savedDataStep2.ebTorzskonyviNeve || null,
         ebFajtaja: savedDataStep2.ebFajtaja,
@@ -173,10 +180,11 @@ const Step3 = ({ handleBack }) => {
         ebSzine: savedDataStep2.ebSzine,
         chipSorszam: savedDataStep2.mikrochip ? savedDataStep2.mikrochipSorszam : null,
         ivartalanitasIdo: savedDataStep2.ivartalanitasIdopontja || null,
+        // Step3 adatok
         oltasiIdo: localFormData.utolsoOltasIdo,
         orvosiBelyegzoSzam: localFormData.orvosiBelyegzoSzam,
         oltasiKonyvSzam: localFormData.oltasiKonyvSzam,
-        oltasiBelyegzoSzam: localFormData.allatorvosBelyegzoSzam, // Ez lesz az allatorvosBelyegzoszam
+        oltasiBelyegzoSzam: localFormData.allatorvosBelyegzoSzam,
         oltanyagSorszam: localFormData.oltanyagSorszam || null,
       };
 

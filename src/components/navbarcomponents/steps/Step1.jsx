@@ -123,13 +123,13 @@ const Step1 = ({ handleNext }) => {
       
       {dataSource === "Fiókadatok" && (
         <div className="mb-4 p-3 bg-blue-900 text-white rounded">
-          A fiókodhoz tartozó adatokat automatikusan betöltöttük. Szükség esetén módosíthatod őket.
+          A fiókodhoz tartozó adatokat automatikusan betöltöttük. Az alábbi mezőkben szerkesztheted az adataidat, ha szükséges.
         </div>
       )}
       
       {dataSource === "Korábban megadott adatok" && (
         <div className="mb-4 p-3 bg-gray-700 text-white rounded">
-          A korábban megadott adataidat betöltöttük. Módosíthatod őket, ha szükséges.
+          A korábban megadott adataidat betöltöttük. Az alábbi mezőkben szerkesztheted az adataidat, ha szükséges.
         </div>
       )}
       
